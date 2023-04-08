@@ -1,0 +1,4 @@
+﻿*.dll
+/.vs
+/EcoWorldCore/bin
+/EcoWorldCore/obj
