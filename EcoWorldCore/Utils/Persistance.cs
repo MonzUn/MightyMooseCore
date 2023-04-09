@@ -47,7 +47,7 @@ namespace Eco.EW.Utils
             try
             {
                 StreamWriter writer = new StreamWriter(path);
-                writer.Write(data);
+                writer.Write(json);
                 return true;
             }
             catch (Exception e)
