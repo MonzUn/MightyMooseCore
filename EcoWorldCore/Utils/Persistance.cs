@@ -8,10 +8,14 @@ namespace Eco.EW.Utils
         public static bool WriteJsonToFile<T>(T data, string directoryPath, string nameAndExtension)
         {
             // Serialize data to JSON
-            string json = SerializationUtils.SerializeJson(data);
-            if(string.IsNullOrWhiteSpace(json))
+            string json;
+            try
             {
-                Logger.Error($"Failed to serialize data for storage file \"{nameAndExtension}\"");
+                json = SerializationUtils.SerializeJson(data);
+            }
+            catch (Exception e)
+            {
+                Logger.Exception($"Failed to serialize data for storage file \"{nameAndExtension}\"", e);
                 return false;
             }
 
@@ -53,12 +57,12 @@ namespace Eco.EW.Utils
             }
         }
 
-        public static T? ReadJsonFromFile<T>(string directoryPath, string nameAndExtension)
+        public static bool ReadJsonFromFile<T>(string directoryPath, string nameAndExtension, ref T data)
         {
             if (!Directory.Exists(directoryPath))
             {
                 Logger.Silent($"Failed to find directory \"{directoryPath}\" for reading storage file \"{nameAndExtension}\"");
-                return default;
+                return false;
             }
 
             // Parse path
@@ -70,14 +74,14 @@ namespace Eco.EW.Utils
             catch (Exception e)
             {
                 Logger.Exception($"Failed to parse path for reading storage file. Directory = \"{directoryPath}\" | Filename = \"{nameAndExtension}\"", e);
-                return default;
+                return false;
             }
 
 
             if (!File.Exists(path))
             {
                 Logger.Silent($"Failed to find file \"{path}\" for reading storage data");
-                return default;
+                return false;
             }
 
             string jsonStr;
@@ -91,16 +95,22 @@ namespace Eco.EW.Utils
             catch(Exception e)
             {
                 Logger.Exception($"Failed to read storage data from \"{path}\"", e);
-                return default;
+                return false;
             }
 
-            T result = SerializationUtils.DeserializeJson<T>(jsonStr);
-            if(result == null)
+            T result;
+            try
             {
-                Logger.Error($"Failed to parse JSON storage data from \"{path}\"");
+                result = SerializationUtils.DeserializeJson<T>(jsonStr);
+            }
+            catch (Exception e)
+            {
+                Logger.Exception($"Failed to parse JSON storage data from \"{path}\"", e);
+                return false;
             }
 
-            return result;
+            data = result;
+            return true;
         }
     }
 }
