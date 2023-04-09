@@ -68,20 +68,22 @@ namespace Eco.EW.Tools
         }
 
         public static void DebugVerbose(string message) => Write(message, LogLevel.DebugVerbose, Assembly.GetCallingAssembly());
-
         public static void Debug(string message) => Write(message, LogLevel.Debug, Assembly.GetCallingAssembly());
 
         public static void Warning(string message) => Write(message, LogLevel.Warning, Assembly.GetCallingAssembly());
+        public static void DebugWarning(string message) => Write(message, LogLevel.Warning, Assembly.GetCallingAssembly(), onlyPrintConsoleIfDebug: true);
 
         public static void Info(string message) => Write(message, LogLevel.Information, Assembly.GetCallingAssembly());
+        public static void DebugInfo(string message) => Write(message, LogLevel.Information, Assembly.GetCallingAssembly(), onlyPrintConsoleIfDebug: true);
 
         public static void Error(string message) => Write(message, LogLevel.Error, Assembly.GetCallingAssembly());
-
+        public static void DebugError(string message) => Write(message, LogLevel.Error, Assembly.GetCallingAssembly(), onlyPrintConsoleIfDebug: true);
         public static void Exception(string message, Exception exception) => Write(message, LogLevel.Error, Assembly.GetCallingAssembly(), exception);
+        public static void DebugException(string message, Exception exception) => Write(message, LogLevel.Error, Assembly.GetCallingAssembly(), exception, onlyPrintConsoleIfDebug: true);
 
         public static void Silent(string message) => Write(message, LogLevel.Silent, Assembly.GetCallingAssembly());
 
-        private static void Write(string message, LogLevel level, Assembly caller, Exception? exception = null)
+        private static void Write(string message, LogLevel level, Assembly caller, Exception? exception = null, bool onlyPrintConsoleIfDebug = false)
         {
             if (Loggers.TryGetValue(caller, out LogData logData))
             {
@@ -102,19 +104,19 @@ namespace Eco.EW.Tools
                         break;
 
                     case LogLevel.Warning:
-                        if (logData.ConfiguredLevel <= LogLevel.Warning)
+                        if (logData.ConfiguredLevel <= LogLevel.Warning && (!onlyPrintConsoleIfDebug || logData.ConfiguredLevel <= LogLevel.Debug))
                             PrintToConsole(message, LogLevel.Warning, logData);
                         logData.Log.WriteWarning(FormatLogMessage(message));
                         break;
 
                     case LogLevel.Information:
-                        if (logData.ConfiguredLevel <= LogLevel.Information)
+                        if (logData.ConfiguredLevel <= LogLevel.Information && (!onlyPrintConsoleIfDebug || logData.ConfiguredLevel <= LogLevel.Debug))
                             PrintToConsole(message, LogLevel.Information, logData);
                         logData.Log.Write(FormatLogMessage(message));
                         break;
 
                     case LogLevel.Error:
-                        if (logData.ConfiguredLevel <= LogLevel.Error)
+                        if (logData.ConfiguredLevel <= LogLevel.Error && (!onlyPrintConsoleIfDebug || logData.ConfiguredLevel <= LogLevel.Debug))
                             PrintToConsole(message, LogLevel.Error, logData);
 
                         ErrorInfo errorInfo = new ErrorInfo(FormatLogMessage(message), exception);
