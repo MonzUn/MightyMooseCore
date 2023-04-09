@@ -37,12 +37,12 @@ namespace Eco.EW.Utils
             {
                 path = Path.Combine(directoryPath, nameAndExtension);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Exception($"Failed to parse path for writing storage file. Directory = \"{directoryPath}\" | Filename = \"{nameAndExtension}\"", e);
                 return false;
             }
-            
+
             // Write JSON to file
             try
             {
@@ -93,7 +93,7 @@ namespace Eco.EW.Utils
                 reader.Close();
                 reader.Dispose();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Exception($"Failed to read storage data from \"{path}\"", e);
                 return false;

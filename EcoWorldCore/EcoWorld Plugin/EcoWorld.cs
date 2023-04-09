@@ -30,7 +30,7 @@ namespace Eco.EW.Plugins
         public IPluginConfig PluginConfig => config;
         public EcoWorldCoreConfig ConfigData => config.Config;
         public object GetEditObject() => config.Config;
-        public void OnEditObjectChanged(object o, string param) =>  ConfigData.OnConfigChanged(param);
+        public void OnEditObjectChanged(object o, string param) => ConfigData.OnConfigChanged(param);
 
         public void Initialize(TimedTask timer)
         {
