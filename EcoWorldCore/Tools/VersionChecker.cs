@@ -43,7 +43,7 @@ namespace Eco.EW.Tools
                 components = new[]
                 {
                     new ConsoleOutputComponent($"{modName} ", ConsoleColor.Green),
-                    new ConsoleOutputComponent($"- installed version ", ConsoleColor.Yellow),
+                    new ConsoleOutputComponent($"- Installed version ", ConsoleColor.Yellow),
                     new ConsoleOutputComponent($"({installedData.Version}) - Up to date!", ConsoleColor.Green),
                 };
 
@@ -53,7 +53,7 @@ namespace Eco.EW.Tools
                 components = new[]
                 {
                     new ConsoleOutputComponent($"{modName} ", ConsoleColor.Green),
-                    new ConsoleOutputComponent($"- installed version ", ConsoleColor.Yellow),
+                    new ConsoleOutputComponent($"- Installed version ", ConsoleColor.Yellow),
                     new ConsoleOutputComponent($"({installedData.Version}) - Outdated!\n", ConsoleColor.Red),
                     new ConsoleOutputComponent($"Please download version ", ConsoleColor.Yellow),
                     new ConsoleOutputComponent($"({modIoData.Version}) ", ConsoleColor.Cyan),
@@ -66,7 +66,7 @@ namespace Eco.EW.Tools
                 components = new[]
                 {
                     new ConsoleOutputComponent($"{modName} ", ConsoleColor.Green),
-                    new ConsoleOutputComponent($"- installed version ", ConsoleColor.Yellow),
+                    new ConsoleOutputComponent($"- Installed version ", ConsoleColor.Yellow),
                     new ConsoleOutputComponent($"({installedData.Version}) - Unreleased", ConsoleColor.Cyan),
                 };
             }
