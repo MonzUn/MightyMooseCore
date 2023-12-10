@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if exist $(SolutionDir)..\Eco\ (set ServerPath=&quot;$(SolutionDir)..\Eco\Server\&quot;) else (set ServerPath=&quot;$(SolutionDir)..\EcoServer\&quot;)&#xD;&#xA;xcopy /Y &quot;$(OutDir)\Eco.EW.Core.dll&quot; &quot;%25ServerPath%25Mods\EcoWorld\&quot;&#xD;&#xA;&#xD;&#xA;if exist $(SolutionDir)..\EcoDiscordPlugin\ (xcopy /Y &quot;$(OutDir)\Eco.EW.Core.dll&quot; &quot;$(SolutionDir)..\EcoDiscordPlugin\Dependencies\Eco.EW.Core.dll&quot;)" />
+    <Exec Command="if exist $(SolutionDir)..\Eco\ (set ServerPath=&quot;$(SolutionDir)..\Eco\Server\&quot;) else (set ServerPath=&quot;$(SolutionDir)..\EcoServer\&quot;)&#xD;&#xA;xcopy /Y &quot;$(OutDir)\Eco.EW.Core.dll&quot; &quot;%25ServerPath%25Mods\EcoWorld\&quot;&#xD;&#xA;&#xD;&#xA;if exist $(SolutionDir)..\EcoDiscordPlugin\ (xcopy /Y &quot;$(OutDir)\Eco.EW.Core.dll&quot; &quot;$(SolutionDir)..\EcoDiscordPlugin\Dependencies\Eco.EW.Core.dll&quot;)&#xD;&#xA;if exist $(SolutionDir)..\Chronicler\ (xcopy /Y &quot;$(OutDir)\Eco.EW.Core.dll&quot; &quot;$(SolutionDir)..\Chronicler\Dependencies\Eco.EW.Core.dll&quot;)" />
   </Target>
 
 </Project>
