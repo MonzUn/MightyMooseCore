@@ -34,7 +34,7 @@ namespace Eco.EW.Plugins
 
         public void Initialize(TimedTask timer)
         {
-            Logger.RegisterLogger("DiscordLink", ConsoleColor.Green, ConfigData.LogLevel);
+            Logger.RegisterLogger("EcoWorldCore", ConsoleColor.Green, ConfigData.LogLevel);
             Status = "Initializing";
             Status = "Running";
         }
