@@ -38,7 +38,7 @@ namespace Eco.EW.Tools
             }
 
             ConsoleOutputComponent[] components;
-            if (modIoData.Version == installedData.Version)
+            if (modIoData.Version.Major == installedData.Version.Major && modIoData.Version.Minor == installedData.Version.Minor && modIoData.Version.Build == installedData.Version.Build)
             {
                 components = new[]
                 {
