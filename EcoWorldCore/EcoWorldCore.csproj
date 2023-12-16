@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <Title>EcoWorld Core</Title>
     <Authors>EcoWorld</Authors>
-    <AssemblyName>Eco.EW.Core</AssemblyName>
+    <AssemblyName>EcoWorldCore</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
