@@ -59,9 +59,11 @@ namespace Eco.EW.Tools
 
         public static bool SetConfiguredLogLevel(LogLevel level)
         {
-            if (Loggers.TryGetValue(Assembly.GetCallingAssembly(), out LogData logData))
+            Assembly? assembly = Assembly.GetCallingAssembly();
+            if (Loggers.TryGetValue(assembly, out LogData logData))
             {
                 logData.ConfiguredLevel = level;
+                Loggers[assembly] = logData;
                 return true;
             }
             return false;
