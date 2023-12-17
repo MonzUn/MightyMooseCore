@@ -119,7 +119,7 @@ namespace Eco.EW.Tools
 
                     case LogLevel.Error:
                         if (logData.ConfiguredLevel <= LogLevel.Error && (!onlyPrintConsoleIfDebug || logData.ConfiguredLevel <= LogLevel.Debug))
-                            PrintToConsole(message, LogLevel.Error, logData);
+                            PrintToConsole($"{message}\nException: {exception}", LogLevel.Error, logData);
 
                         ErrorInfo errorInfo = new ErrorInfo(FormatLogMessage(message), exception);
                         logData.Log.WriteError(ref errorInfo, stripTagsForConsole: true);
