@@ -136,9 +136,6 @@ namespace Eco.EW.Tools
 
         private static void PrintToConsole(string message, LogLevel level, LogData logData)
         {
-            if (logData.ConfiguredLevel == LogLevel.Silent)
-                return;
-
             ConsoleOutputComponent[] components = new[]
             {
                     new ConsoleOutputComponent(Localizer.DoStr($"[{logData.Tag}] "), logData.TagColor),
