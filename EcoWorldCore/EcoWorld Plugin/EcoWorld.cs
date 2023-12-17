@@ -28,7 +28,7 @@ namespace Eco.EW.Plugins
         private readonly PluginConfig<EcoWorldCoreConfig> config = new PluginConfig<EcoWorldCoreConfig>("EcoWorldCore");
 
         private const string ModIODeveloperToken = ""; // This will always be empty for all but actual release builds.
-        private const string ModIOAppID = "";
+        private const string ModIOAppID = "3561559";
 
         public override string ToString() => "EcoWorld Core";
         public string GetCategory() => "EcoWorld Mods";
