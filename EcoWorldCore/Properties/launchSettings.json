@@ -2,8 +2,8 @@
   "profiles": {
     "EcoWorldCore": {
       "commandName": "Executable",
-      "executablePath": "$(MSBuildProjectDirectory)/../../Eco/Server\\bin\\Debug\\net7.0-windows\\EcoServer.exe",
-      "workingDirectory": "$(MSBuildProjectDirectory)/../../Eco/Server\\bin\\Debug\\net7.0-windows"
+      "executablePath": "$(SolutionDir)/../Eco/Server\\bin\\Debug\\net7.0-windows\\EcoServer.exe",
+      "workingDirectory": "$(SolutionDir)../Eco/Server\\bin\\Debug\\net7.0-windows"
     }
   }
 }
