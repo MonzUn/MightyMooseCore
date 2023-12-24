@@ -8,11 +8,12 @@ using System.Reflection;
 namespace Eco.EW.Plugins
 {
     [Priority(PriorityAttribute.VeryHigh)] // Need to start before any dependent plugins
-    public class EcoWorldCore : IModKitPlugin, IInitializablePlugin, IConfigurablePlugin
+    public class MightyMooseCore : IModKitPlugin, IInitializablePlugin, IConfigurablePlugin
     {
         public readonly Version PluginVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        public readonly string PluginName = "MightyMooseCore";
 
-        public static EcoWorldCore Obj { get { return PluginManager.GetPlugin<EcoWorldCore>(); } }
+        public static MightyMooseCore Obj { get { return PluginManager.GetPlugin<MightyMooseCore>(); } }
         public ThreadSafeAction<object, string> ParamChanged { get; set; }
         public string Status
         {
@@ -25,27 +26,27 @@ namespace Eco.EW.Plugins
         }
         private string status = "Uninitialized";
 
-        private readonly PluginConfig<EcoWorldCoreConfig> config = new PluginConfig<EcoWorldCoreConfig>("EcoWorldCore");
+        private readonly PluginConfig<MightyMooseCoreConfig> config = new PluginConfig<MightyMooseCoreConfig>("MightyMooseCore");
 
         private const string ModIODeveloperToken = ""; // This will always be empty for all but actual release builds.
         private const string ModIOAppID = "3561559";
 
-        public override string ToString() => "EcoWorld Core";
-        public string GetCategory() => "EcoWorld Mods";
+        public override string ToString() => "Mighty Moose Core";
+        public string GetCategory() => "Mighty Moose Mods";
         public string GetStatus() => Status;
         public IPluginConfig PluginConfig => config;
-        public EcoWorldCoreConfig ConfigData => config.Config;
+        public MightyMooseCoreConfig ConfigData => config.Config;
         public object GetEditObject() => config.Config;
         public void OnEditObjectChanged(object o, string param) => ConfigData.OnConfigChanged(param);
 
         public void Initialize(TimedTask timer)
         {
-            Logger.RegisterLogger("EcoWorldCore", ConsoleColor.Green, ConfigData.LogLevel);
+            Logger.RegisterLogger(PluginName, ConsoleColor.Green, ConfigData.LogLevel);
 
             Status = "Initializing";
 
             if (!string.IsNullOrWhiteSpace(ModIOAppID) && !string.IsNullOrWhiteSpace(ModIODeveloperToken)) // Only check for mod versioning if the data required for it exists
-                VersionChecker.CheckVersion("EcoWorldCore", ModIOAppID, ModIODeveloperToken);
+                VersionChecker.CheckVersion( PluginName, ModIOAppID, ModIODeveloperToken);
             else
                 Logger.Info($"Plugin version is {PluginVersion}");
 

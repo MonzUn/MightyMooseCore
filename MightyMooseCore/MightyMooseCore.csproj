@@ -6,13 +6,13 @@
     <Nullable>enable</Nullable>
     <Title>EcoWorld Core</Title>
     <Authors>EcoWorld</Authors>
-    <AssemblyName>EcoWorldCore</AssemblyName>
+    <AssemblyName>MightyMooseCore</AssemblyName>
     <Version>1.0.1</Version>
     <OutputType>Library</OutputType>
   </PropertyGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="set server_dir=$(SolutionDir)..\Eco\Server\&#xD;&#xA;xcopy /Y &quot;$(OutDir)\EcoWorldCore.dll&quot; &quot;%25server_dir%25Mods\EcoWorld\&quot;" />
+    <Exec Command="set server_dir=$(SolutionDir)..\Eco\Server\&#xD;&#xA;xcopy /Y &quot;$(OutDir)\MightyMooseCore.dll&quot; &quot;%25server_dir%25Mods\MightyMoose\&quot;" />
   </Target>
 
   <ItemGroup>

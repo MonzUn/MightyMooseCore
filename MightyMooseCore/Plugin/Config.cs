@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace Eco.EW.Plugins
 {
-    public class EcoWorldCoreConfig
+    public class MightyMooseCoreConfig
     {
         public static class DefaultValues
         {
