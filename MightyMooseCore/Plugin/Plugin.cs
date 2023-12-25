@@ -2,10 +2,10 @@
 using Eco.Core.Plugins;
 using Eco.Core.Plugins.Interfaces;
 using Eco.Core.Utils;
-using Eco.EW.Tools;
+using Eco.Moose.Tools;
 using System.Reflection;
 
-namespace Eco.EW.Plugins
+namespace Eco.Moose.Plugins
 {
     [Priority(PriorityAttribute.VeryHigh)] // Need to start before any dependent plugins
     public class MightyMooseCore : IModKitPlugin, IInitializablePlugin, IConfigurablePlugin

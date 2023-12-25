@@ -1,7 +1,7 @@
 ﻿using Eco.Core.Serialization;
-using Eco.EW.Tools;
+using Eco.Moose.Tools;
 
-namespace Eco.EW.Utils
+namespace Eco.Moose.Utils
 {
     public static class Persistance
     {

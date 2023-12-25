@@ -1,7 +1,7 @@
-﻿using Eco.EW.Tools;
+﻿using Eco.Moose.Tools;
 using System.ComponentModel;
 
-namespace Eco.EW.Plugins
+namespace Eco.Moose.Plugins
 {
     public class MightyMooseCoreConfig
     {

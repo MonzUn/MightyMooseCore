@@ -2,9 +2,9 @@
 using Eco.ModKit;
 using Eco.Shared.Utils;
 using System.Diagnostics;
-using static Eco.EW.Utils.Console;
+using static Eco.Moose.Utils.Console;
 
-namespace Eco.EW.Tools
+namespace Eco.Moose.Tools
 {
     public static class VersionChecker
     {

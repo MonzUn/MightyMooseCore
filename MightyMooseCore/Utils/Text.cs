@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace Eco.EW.Utils
+namespace Eco.Moose.Utils
 {
     public static class Text
     {

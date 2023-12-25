@@ -1,10 +1,10 @@
 ﻿using Eco.Core.Utils.Logging;
 using Eco.Shared.Localization;
 using System.Reflection;
-using static Eco.EW.Utils.Console;
+using static Eco.Moose.Utils.Console;
 using static Eco.Shared.Utils.ILogWriter;
 
-namespace Eco.EW.Tools
+namespace Eco.Moose.Tools
 {
     public static class Logger
     {
