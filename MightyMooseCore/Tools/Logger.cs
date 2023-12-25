@@ -119,7 +119,13 @@ namespace Eco.Moose.Tools
 
                     case LogLevel.Error:
                         if (logData.ConfiguredLevel <= LogLevel.Error && (!onlyPrintConsoleIfDebug || logData.ConfiguredLevel <= LogLevel.Debug))
-                            PrintToConsole($"{message}\nException: {exception}", LogLevel.Error, logData);
+                        {
+                            if(exception != null)
+                            {
+                                message += $"\nException: {exception}";
+                            }
+                            PrintToConsole(message, LogLevel.Error, logData);
+                        }
 
                         ErrorInfo errorInfo = new ErrorInfo(FormatLogMessage(message), exception);
                         logData.Log.WriteError(ref errorInfo, stripTagsForConsole: true);
