@@ -32,7 +32,7 @@ namespace Eco.Moose.Plugins
         private const string ModIOAppID = "3561559";
 
         public override string ToString() => "Mighty Moose Core";
-        public string GetCategory() => "Mighty Moose Mods";
+        public string GetCategory() => "Mighty Moose";
         public string GetStatus() => Status;
         public IPluginConfig PluginConfig => config;
         public MightyMooseCoreConfig ConfigData => config.Config;
