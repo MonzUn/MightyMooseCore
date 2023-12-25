@@ -4,8 +4,9 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Title>EcoWorld Core</Title>
-    <Authors>EcoWorld</Authors>
+    <Title>Mighty Moose Core</Title>
+    <Authors>MonzUn</Authors>
+    <Company>Mighty Moose Mods</Company>
     <AssemblyName>MightyMooseCore</AssemblyName>
     <Version>1.0.1</Version>
     <OutputType>Library</OutputType>
