@@ -101,7 +101,7 @@ namespace Eco.Moose.Tools
 
             if (modIoRequestResult.Status != 1)
             {
-                Logger.Error($"Mod metadate for mod with ID {modIoModId} returned invalid status");
+                Logger.Error($"Mod metadata for mod with ID {modIoModId} returned invalid status");
                 return null;
             }
 
