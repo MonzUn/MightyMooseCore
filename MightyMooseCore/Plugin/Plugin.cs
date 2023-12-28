@@ -10,7 +10,8 @@ namespace Eco.Moose.Plugins
     [Priority(PriorityAttribute.VeryHigh)] // Need to start before any dependent plugins
     public class MightyMooseCore : IModKitPlugin, IInitializablePlugin, IConfigurablePlugin
     {
-        public readonly Version PluginVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        public readonly Version InstalledVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        public Version? ModIOVersion { get; private set; } = null;
         public readonly string PluginName = "MightyMooseCore";
 
         public static MightyMooseCore Obj { get { return PluginManager.GetPlugin<MightyMooseCore>(); } }
@@ -39,16 +40,17 @@ namespace Eco.Moose.Plugins
         public object GetEditObject() => config.Config;
         public void OnEditObjectChanged(object o, string param) => ConfigData.OnConfigChanged(param);
 
-        public void Initialize(TimedTask timer)
+        public async void Initialize(TimedTask timer)
         {
             Logger.RegisterLogger(PluginName, ConsoleColor.Green, ConfigData.LogLevel);
 
             Status = "Initializing";
 
-            if (!string.IsNullOrWhiteSpace(ModIOAppID) && !string.IsNullOrWhiteSpace(ModIODeveloperToken)) // Only check for mod versioning if the data required for it exists
-                VersionChecker.CheckVersion( PluginName, ModIOAppID, ModIODeveloperToken);
+            // Check mod versioning if the required data exists
+            if (!string.IsNullOrWhiteSpace(ModIOAppID) && !string.IsNullOrWhiteSpace(ModIODeveloperToken))
+                ModIOVersion = await VersionChecker.CheckVersion( PluginName, ModIOAppID, ModIODeveloperToken);
             else
-                Logger.Info($"Plugin version is {PluginVersion}");
+                Logger.Info($"Plugin version is {InstalledVersion.ToString(3)}");
 
             Status = "Running";
         }

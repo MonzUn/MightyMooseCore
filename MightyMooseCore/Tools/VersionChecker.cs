@@ -28,13 +28,14 @@ namespace Eco.Moose.Tools
             public string? ModPageUrl;
         }
 
-        public static async void CheckVersion(string modName, string modIoModId, string modIoApiKey)
+        public static async Task<Version?> CheckVersion(string modName, string modIoModId, string modIoApiKey, int versionOutputComponentCount = 3)
         {
             ModIoData? modIoData = await GetModIoData(modIoModId, modIoApiKey);
             InstalledModData? installedData = GetInstalledModData(modName);
             if (modIoData == null || installedData == null || modIoData.Version == null || installedData.Version == null)
             {
-                return;
+                Logger.Error($"Failed to retreive mod version for {modName}");
+                return null;
             }
 
             ConsoleOutputComponent[] components;
@@ -44,7 +45,7 @@ namespace Eco.Moose.Tools
                 {
                     new ConsoleOutputComponent($"{modName} ", ConsoleColor.Green),
                     new ConsoleOutputComponent($"- Installed version ", ConsoleColor.Yellow),
-                    new ConsoleOutputComponent($"({installedData.Version}) - Up to date!", ConsoleColor.Green),
+                    new ConsoleOutputComponent($"({installedData.Version.ToString(versionOutputComponentCount)}) - Up to date!", ConsoleColor.Green),
                 };
 
             }
@@ -54,9 +55,9 @@ namespace Eco.Moose.Tools
                 {
                     new ConsoleOutputComponent($"{modName} ", ConsoleColor.Green),
                     new ConsoleOutputComponent($"- Installed version ", ConsoleColor.Yellow),
-                    new ConsoleOutputComponent($"({installedData.Version}) - Outdated!\n", ConsoleColor.Red),
+                    new ConsoleOutputComponent($"({installedData.Version.ToString(versionOutputComponentCount)}) - Outdated!\n", ConsoleColor.Red),
                     new ConsoleOutputComponent($"Please download version ", ConsoleColor.Yellow),
-                    new ConsoleOutputComponent($"({modIoData.Version}) ", ConsoleColor.Cyan),
+                    new ConsoleOutputComponent($"({modIoData.Version.ToString(versionOutputComponentCount)}) ", ConsoleColor.Cyan),
                     new ConsoleOutputComponent($"from ", ConsoleColor.Yellow),
                     new ConsoleOutputComponent($"{modIoData.ModPageUrl}", ConsoleColor.Gray),
                 };
@@ -67,10 +68,11 @@ namespace Eco.Moose.Tools
                 {
                     new ConsoleOutputComponent($"{modName} ", ConsoleColor.Green),
                     new ConsoleOutputComponent($"- Installed version ", ConsoleColor.Yellow),
-                    new ConsoleOutputComponent($"({installedData.Version}) - Unreleased", ConsoleColor.Cyan),
+                    new ConsoleOutputComponent($"({installedData.Version.ToString(versionOutputComponentCount)}) - Unreleased", ConsoleColor.Cyan),
                 };
             }
             PrintConsoleColored(components);
+            return modIoData.Version;
         }
 
         private static async Task<ModIoData?> GetModIoData(string modIoModId, string modIoApiKey)
