@@ -145,7 +145,7 @@ namespace Eco.Moose.Tools
             ConsoleOutputComponent[] components = new[]
             {
                     new ConsoleOutputComponent(Localizer.DoStr($"[{logData.Tag}] "), logData.TagColor),
-                    new ConsoleOutputComponent(Localizer.DoStr($"[{message}] "), LogLevelColors[(int)level]),
+                    new ConsoleOutputComponent(Localizer.DoStr(message), LogLevelColors[(int)level]),
                 };
             PrintConsoleColored(components);
         }
