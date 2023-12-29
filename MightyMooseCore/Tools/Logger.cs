@@ -69,21 +69,21 @@ namespace Eco.Moose.Tools
             return false;
         }
 
-        public static void Trace(string message) => Write(message, LogLevel.Trace, Assembly.GetCallingAssembly());
-        public static void Debug(string message) => Write(message, LogLevel.Debug, Assembly.GetCallingAssembly());
+        public static void Trace(string message, Assembly? caller = null) => Write(message, LogLevel.Trace, caller ?? Assembly.GetCallingAssembly());
+        public static void Debug(string message, Assembly? caller = null) => Write(message, LogLevel.Debug, caller ?? Assembly.GetCallingAssembly());
 
-        public static void Warning(string message) => Write(message, LogLevel.Warning, Assembly.GetCallingAssembly());
-        public static void DebugWarning(string message) => Write(message, LogLevel.Warning, Assembly.GetCallingAssembly(), onlyPrintConsoleIfDebug: true);
+        public static void Warning(string message, Assembly? caller = null) => Write(message, LogLevel.Warning, caller ?? Assembly.GetCallingAssembly());
+        public static void DebugWarning(string message, Assembly? caller = null) => Write(message, LogLevel.Warning, caller ?? Assembly.GetCallingAssembly(), onlyPrintConsoleIfDebug: true);
 
-        public static void Info(string message) => Write(message, LogLevel.Information, Assembly.GetCallingAssembly());
-        public static void DebugInfo(string message) => Write(message, LogLevel.Information, Assembly.GetCallingAssembly(), onlyPrintConsoleIfDebug: true);
+        public static void Info(string message, Assembly? caller = null) => Write(message, LogLevel.Information, caller ?? Assembly.GetCallingAssembly());
+        public static void DebugInfo(string message, Assembly? caller = null) => Write(message, LogLevel.Information, caller ?? Assembly.GetCallingAssembly(), onlyPrintConsoleIfDebug: true);
 
-        public static void Error(string message) => Write(message, LogLevel.Error, Assembly.GetCallingAssembly());
-        public static void DebugError(string message) => Write(message, LogLevel.Error, Assembly.GetCallingAssembly(), onlyPrintConsoleIfDebug: true);
-        public static void Exception(string message, Exception exception) => Write(message, LogLevel.Error, Assembly.GetCallingAssembly(), exception);
-        public static void DebugException(string message, Exception exception) => Write(message, LogLevel.Error, Assembly.GetCallingAssembly(), exception, onlyPrintConsoleIfDebug: true);
+        public static void Error(string message, Assembly? caller = null) => Write(message, LogLevel.Error, caller ?? Assembly.GetCallingAssembly());
+        public static void DebugError(string message, Assembly? caller = null) => Write(message, LogLevel.Error, caller ?? Assembly.GetCallingAssembly(), onlyPrintConsoleIfDebug: true);
+        public static void Exception(string message, Exception exception, Assembly? caller = null) => Write(message, LogLevel.Error, caller ?? Assembly.GetCallingAssembly(), exception);
+        public static void DebugException(string message, Exception exception, Assembly? caller = null) => Write(message, LogLevel.Error, caller ?? Assembly.GetCallingAssembly(), exception, onlyPrintConsoleIfDebug: true);
 
-        public static void Silent(string message) => Write(message, LogLevel.Silent, Assembly.GetCallingAssembly());
+        public static void Silent(string message, Assembly? caller = null) => Write(message, LogLevel.Silent, caller ?? Assembly.GetCallingAssembly());
 
         private static void Write(string message, LogLevel level, Assembly caller, Exception? exception = null, bool onlyPrintConsoleIfDebug = false)
         {

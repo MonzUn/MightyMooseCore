@@ -1,5 +1,6 @@
 ﻿using Eco.Core.Serialization;
 using Eco.Moose.Tools;
+using System.Reflection;
 
 namespace Eco.Moose.Utils
 {
@@ -15,7 +16,7 @@ namespace Eco.Moose.Utils
             }
             catch (Exception e)
             {
-                Logger.Exception($"Failed to serialize data for storage file \"{nameAndExtension}\"", e);
+                Logger.Exception($"Failed to serialize data for storage file \"{nameAndExtension}\"", e, Assembly.GetCallingAssembly());
                 return false;
             }
 
@@ -27,7 +28,7 @@ namespace Eco.Moose.Utils
             }
             catch (Exception e)
             {
-                Logger.Exception($"Failed to create directory \"{directoryPath}\" while writing storage file \"{nameAndExtension}\"", e);
+                Logger.Exception($"Failed to create directory \"{directoryPath}\" while writing storage file \"{nameAndExtension}\"", e, Assembly.GetCallingAssembly());
                 return false;
             }
 
@@ -39,7 +40,7 @@ namespace Eco.Moose.Utils
             }
             catch (Exception e)
             {
-                Logger.Exception($"Failed to parse path for writing storage file. Directory = \"{directoryPath}\" | Filename = \"{nameAndExtension}\"", e);
+                Logger.Exception($"Failed to parse path for writing storage file. Directory = \"{directoryPath}\" | Filename = \"{nameAndExtension}\"", e, Assembly.GetCallingAssembly());
                 return false;
             }
 
@@ -53,7 +54,7 @@ namespace Eco.Moose.Utils
             }
             catch (Exception e)
             {
-                Logger.Exception($"Failed to write JSON storage data to \"{path}\"", e);
+                Logger.Exception($"Failed to write JSON storage data to \"{path}\"", e, Assembly.GetCallingAssembly());
                 return false;
             }
         }
@@ -62,7 +63,7 @@ namespace Eco.Moose.Utils
         {
             if (!Directory.Exists(directoryPath))
             {
-                Logger.Silent($"Failed to find directory \"{directoryPath}\" for reading storage file \"{nameAndExtension}\"");
+                Logger.Silent($"Failed to find directory \"{directoryPath}\" for reading storage file \"{nameAndExtension}\"", Assembly.GetCallingAssembly());
                 return false;
             }
 
@@ -74,14 +75,14 @@ namespace Eco.Moose.Utils
             }
             catch (Exception e)
             {
-                Logger.Exception($"Failed to parse path for reading storage file. Directory = \"{directoryPath}\" | Filename = \"{nameAndExtension}\"", e);
+                Logger.Exception($"Failed to parse path for reading storage file. Directory = \"{directoryPath}\" | Filename = \"{nameAndExtension}\"", e, Assembly.GetCallingAssembly());
                 return false;
             }
 
 
             if (!File.Exists(path))
             {
-                Logger.Silent($"Failed to find file \"{path}\" for reading storage data");
+                Logger.Silent($"Failed to find file \"{path}\" for reading storage data", Assembly.GetCallingAssembly());
                 return false;
             }
 
@@ -95,7 +96,7 @@ namespace Eco.Moose.Utils
             }
             catch (Exception e)
             {
-                Logger.Exception($"Failed to read storage data from \"{path}\"", e);
+                Logger.Exception($"Failed to read storage data from \"{path}\"", e, Assembly.GetCallingAssembly());
                 return false;
             }
 
@@ -106,7 +107,7 @@ namespace Eco.Moose.Utils
             }
             catch (Exception e)
             {
-                Logger.Exception($"Failed to parse JSON storage data from \"{path}\"", e);
+                Logger.Exception($"Failed to parse JSON storage data from \"{path}\"", e, Assembly.GetCallingAssembly());
                 return false;
             }
 

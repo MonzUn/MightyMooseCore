@@ -2,6 +2,7 @@
 using Eco.ModKit;
 using Eco.Shared.Utils;
 using System.Diagnostics;
+using System.Reflection;
 using static Eco.Moose.Utils.Console;
 
 namespace Eco.Moose.Tools
@@ -34,7 +35,7 @@ namespace Eco.Moose.Tools
             InstalledModData? installedData = GetInstalledModData(modName);
             if (modIoData == null || installedData == null || modIoData.Version == null || installedData.Version == null)
             {
-                Logger.Error($"Failed to retreive mod version for {modName}");
+                Logger.Error($"Failed to retreive mod version", Assembly.GetCallingAssembly());
                 return null;
             }
 
@@ -84,26 +85,26 @@ namespace Eco.Moose.Tools
             }
             catch (Exception e)
             {
-                Logger.Exception($"Failed to fetch mod metadata for mod with ID {modIoModId} from ModIO", e);
+                Logger.Exception($"Failed to fetch mod metadata from ModIO", e, Assembly.GetCallingAssembly());
                 return null;
             }
 
             if (modIoJsonResult == null)
             {
-                Logger.Error($"ModIO mod metadata for mod with ID {modIoModId} was null");
+                Logger.Error($"ModIO mod metadata was null", Assembly.GetCallingAssembly());
                 return null;
             }
 
             ModIoRequestData? modIoRequestResult = SerializationUtils.DeserializeJson<ModIoRequestData>(modIoJsonResult);
             if (modIoRequestResult == null)
             {
-                Logger.Error($"Failed to parse ModIO mod metadata for mod with ID {modIoModId}");
+                Logger.Error($"Failed to parse ModIO mod metadata", Assembly.GetCallingAssembly());
                 return null;
             }
 
             if (modIoRequestResult.Status != 1)
             {
-                Logger.Error($"Mod metadata for mod with ID {modIoModId} returned invalid status");
+                Logger.Error($"Mod metadata returned invalid status", Assembly.GetCallingAssembly());
                 return null;
             }
 
@@ -117,7 +118,7 @@ namespace Eco.Moose.Tools
             }
             catch
             {
-                Logger.Warning($"Failed to parse ModIO mod version string for mod with ID {modIoModId}");
+                Logger.Warning($"Failed to parse ModIO mod version string", Assembly.GetCallingAssembly());
             }
 
             return modIoData;
@@ -138,7 +139,7 @@ namespace Eco.Moose.Tools
                     }
                     catch
                     {
-                        Logger.Warning($"Failed to parse installed mod version string for {productName}");
+                        Logger.Warning($"Failed to parse installed mod version string", Assembly.GetCallingAssembly());
                         return null;
                     }
                     break;
