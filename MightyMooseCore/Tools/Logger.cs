@@ -10,7 +10,7 @@ namespace Eco.Moose.Tools
     {
         public enum LogLevel
         {
-            DebugVerbose, // Ignored unless the configured log level is also DebugVerbose
+            Trace,
             Debug,
             Warning,
             Information,
@@ -20,7 +20,7 @@ namespace Eco.Moose.Tools
 
         private static ConsoleColor[] LogLevelColors = new ConsoleColor[]
         {
-            ConsoleColor.Gray,          // DebugVerbose
+            ConsoleColor.Gray,          // Trace
             ConsoleColor.Gray,          // Debug
             ConsoleColor.DarkYellow,    // Warning
             ConsoleColor.White,         // Information
@@ -69,7 +69,7 @@ namespace Eco.Moose.Tools
             return false;
         }
 
-        public static void DebugVerbose(string message) => Write(message, LogLevel.DebugVerbose, Assembly.GetCallingAssembly());
+        public static void Trace(string message) => Write(message, LogLevel.Trace, Assembly.GetCallingAssembly());
         public static void Debug(string message) => Write(message, LogLevel.Debug, Assembly.GetCallingAssembly());
 
         public static void Warning(string message) => Write(message, LogLevel.Warning, Assembly.GetCallingAssembly());
@@ -91,11 +91,11 @@ namespace Eco.Moose.Tools
             {
                 switch (level)
                 {
-                    case LogLevel.DebugVerbose:
-                        if (logData.ConfiguredLevel <= LogLevel.DebugVerbose)
+                    case LogLevel.Trace:
+                        if (logData.ConfiguredLevel <= LogLevel.Trace)
                         {
-                            PrintToConsole(message, LogLevel.DebugVerbose, logData);
-                            logData.Log.Debug(FormatLogMessage(message)); // Verbose debug log messages are only written to the log file if enabled via configuration
+                            PrintToConsole(message, LogLevel.Trace, logData);
+                            logData.Log.Debug(FormatLogMessage(message)); // Trace log messages are only written to the log file if enabled via configuration
                         }
                         break;
 
