@@ -126,7 +126,7 @@ namespace Eco.Moose.Tools
 
         private static InstalledModData? GetInstalledModData(string productName)
         {
-            Version version = null;
+            Version? version = null;
             string[] assemblies = Directory.GetFiles(ModKitPlugin.ModDirectory, "*.dll", SearchOption.AllDirectories);
             foreach (string assembly in assemblies)
             {
