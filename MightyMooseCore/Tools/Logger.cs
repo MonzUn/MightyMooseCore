@@ -10,7 +10,7 @@ namespace Eco.Moose.Tools
     {
         public enum LogLevel
         {
-            Trace,
+            Trace, // Trace log messages are only written to the log file if enabled via configuration
             Debug,
             Warning,
             Information,
