@@ -50,6 +50,7 @@ namespace Eco.Moose.Utils
                 StreamWriter writer = new StreamWriter(path);
                 writer.Write(json);
                 writer.Flush();
+                Logger.Trace($"Successfully wrote persistance JSON to \"{path}\"", Assembly.GetCallingAssembly());
                 return true;
             }
             catch (Exception e)
@@ -111,6 +112,7 @@ namespace Eco.Moose.Utils
                 return false;
             }
 
+            Logger.Trace($"Successfully read persistance JSON from \"{path}\"", Assembly.GetCallingAssembly());
             data = result;
             return true;
         }

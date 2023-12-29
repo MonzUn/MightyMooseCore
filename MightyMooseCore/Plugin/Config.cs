@@ -12,6 +12,8 @@ namespace Eco.Moose.Plugins
 
         public void OnConfigChanged(string param)
         {
+            Logger.Trace("OnConfigChanged was invoked");
+
             if (param == nameof(LogLevel))
             {
                 Logger.SetConfiguredLogLevel(LogLevel);
