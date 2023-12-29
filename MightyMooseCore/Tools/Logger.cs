@@ -95,26 +95,26 @@ namespace Eco.Moose.Tools
                         if (logData.ConfiguredLevel <= LogLevel.Trace)
                         {
                             PrintToConsole(message, LogLevel.Trace, logData);
-                            logData.Log.Debug(FormatLogMessage(message)); // Trace log messages are only written to the log file if enabled via configuration
+                            logData.Log.Write(FormatLogMessage(message, LogLevel.Trace)); // Trace log messages are only written to the log file if enabled via configuration
                         }
                         break;
 
                     case LogLevel.Debug:
                         if (logData.ConfiguredLevel <= LogLevel.Debug)
                             PrintToConsole(message, LogLevel.Debug, logData);
-                        logData.Log.Debug(FormatLogMessage(message));
+                        logData.Log.Write(FormatLogMessage(message, LogLevel.Debug));
                         break;
 
                     case LogLevel.Warning:
                         if (logData.ConfiguredLevel <= LogLevel.Warning && (!onlyPrintConsoleIfDebug || logData.ConfiguredLevel <= LogLevel.Debug))
                             PrintToConsole(message, LogLevel.Warning, logData);
-                        logData.Log.WriteWarning(FormatLogMessage(message));
+                        logData.Log.WriteWarning(FormatLogMessage(message, LogLevel.Warning));
                         break;
 
                     case LogLevel.Information:
                         if (logData.ConfiguredLevel <= LogLevel.Information && (!onlyPrintConsoleIfDebug || logData.ConfiguredLevel <= LogLevel.Debug))
                             PrintToConsole(message, LogLevel.Information, logData);
-                        logData.Log.Write(FormatLogMessage(message));
+                        logData.Log.Write(FormatLogMessage(message, LogLevel.Information));
                         break;
 
                     case LogLevel.Error:
@@ -127,18 +127,18 @@ namespace Eco.Moose.Tools
                             PrintToConsole(message, LogLevel.Error, logData);
                         }
 
-                        ErrorInfo errorInfo = new ErrorInfo(FormatLogMessage(message), exception);
+                        ErrorInfo errorInfo = new ErrorInfo(FormatLogMessage(message, LogLevel.Error), exception);
                         logData.Log.WriteError(ref errorInfo, stripTagsForConsole: true);
                         break;
 
                     case LogLevel.Silent:
-                        logData.Log.Write(FormatLogMessage(message));
+                        logData.Log.Write(FormatLogMessage(message, LogLevel.Information));
                         break;
                 }
             }
         }
 
-        private static string FormatLogMessage(string message) => ($"[{DateTime.Now:hh:mm:ss}] {message}");
+        private static string FormatLogMessage(string message, LogLevel level) => ($"[{level}] {message}");
 
         private static void PrintToConsole(string message, LogLevel level, LogData logData)
         {
