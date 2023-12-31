@@ -8,8 +8,9 @@
     <Authors>MonzUn</Authors>
     <Company>Mighty Moose Mods</Company>
     <AssemblyName>MightyMooseCore</AssemblyName>
-    <Version>1.0.1</Version>
+    <RootNamespace>Eco.Moose</RootNamespace>
     <OutputType>Library</OutputType>
+    <Version>1.0.1</Version>
   </PropertyGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
