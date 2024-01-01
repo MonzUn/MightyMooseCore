@@ -22,14 +22,17 @@
     <Reference Include="Eco.Core">
       <HintPath Condition="Exists('..\Dependencies\Eco.Core.dll')">..\Dependencies\Eco.Core.dll</HintPath>
       <HintPath Condition="Exists('..\..\Eco\Server\Eco.Core\bin\Release\net7.0\Eco.Core.dll')">..\..\Eco\Server\Eco.Core\bin\Release\net7.0\Eco.Core.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Eco.ModKit">
       <HintPath Condition="Exists('..\Dependencies\Eco.ModKit.dll')">..\Dependencies\Eco.ModKit.dll</HintPath>
       <HintPath Condition="Exists('..\..\Eco\Server\Eco.ModKit\bin\Release\net7.0-windows\Eco.ModKit.dll')">..\..\Eco\Server\Eco.ModKit\bin\Release\net7.0-windows\Eco.ModKit.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Eco.Shared">
       <HintPath Condition="Exists('..\Dependencies\Eco.Shared.dll')">..\Dependencies\Eco.Shared.dll</HintPath>
       <HintPath Condition="Exists('..\..\Eco\Server\Eco.Shared\bin\Release\net7.0\Eco.Shared.dll')">..\..\Eco\Server\Eco.Shared\bin\Release\net7.0\Eco.Shared.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 
