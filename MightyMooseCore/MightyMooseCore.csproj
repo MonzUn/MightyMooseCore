@@ -23,29 +23,13 @@
       <HintPath Condition="Exists('..\Dependencies\Eco.Core.dll')">..\Dependencies\Eco.Core.dll</HintPath>
       <HintPath Condition="Exists('..\..\Eco\Server\Eco.Core\bin\Release\net7.0\Eco.Core.dll')">..\..\Eco\Server\Eco.Core\bin\Release\net7.0\Eco.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Eco.Gameplay">
-      <HintPath Condition="Exists('..\Dependencies\Eco.Gameplay.dll')">..\Dependencies\Eco.Gameplay.dll</HintPath>
-      <HintPath Condition="Exists('..\..\Eco\Server\Eco.Gameplay\bin\Release\net7.0-windows\Eco.Gameplay.dll')">..\..\Eco\Server\Eco.Gameplay\bin\Release\net7.0-windows\Eco.Gameplay.dll</HintPath>
-    </Reference>
     <Reference Include="Eco.ModKit">
       <HintPath Condition="Exists('..\Dependencies\Eco.ModKit.dll')">..\Dependencies\Eco.ModKit.dll</HintPath>
       <HintPath Condition="Exists('..\..\Eco\Server\Eco.ModKit\bin\Release\net7.0-windows\Eco.ModKit.dll')">..\..\Eco\Server\Eco.ModKit\bin\Release\net7.0-windows\Eco.ModKit.dll</HintPath>
     </Reference>
-    <Reference Include="Eco.Plugins">
-      <HintPath Condition="Exists('..\Dependencies\Eco.Plugins.dll')">..\Dependencies\Eco.Plugins.dll</HintPath>
-      <HintPath Condition="Exists('..\..\Eco\Server\Eco.Plugins\bin\Release\net7.0-windows\Eco.Plugins.dll')">..\..\Eco\Server\Eco.Plugins\bin\Release\net7.0-windows\Eco.Plugins.dll</HintPath>
-    </Reference>
     <Reference Include="Eco.Shared">
       <HintPath Condition="Exists('..\Dependencies\Eco.Shared.dll')">..\Dependencies\Eco.Shared.dll</HintPath>
       <HintPath Condition="Exists('..\..\Eco\Server\Eco.Shared\bin\Release\net7.0\Eco.Shared.dll')">..\..\Eco\Server\Eco.Shared\bin\Release\net7.0\Eco.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="Eco.Simulation">
-      <HintPath Condition="Exists('..\Dependencies\Eco.Simulation.dll')">..\Dependencies\Eco.Simulation.dll</HintPath>
-      <HintPath Condition="Exists('..\..\Eco\Server\Eco.Simulation\bin\Release\net7.0-windows\Eco.Simulation.dll')">..\..\Eco\Server\Eco.Simulation\bin\Release\net7.0-windows\Eco.Simulation.dll</HintPath>
-    </Reference>
-    <Reference Include="Eco.WorldGenerator">
-      <HintPath Condition="Exists('..\Dependencies\Eco.WorldGenerator.dll')">..\Dependencies\Eco.WorldGenerator.dll</HintPath>
-      <HintPath Condition="Exists('..\..\Eco\Server\Eco.WorldGenerator\bin\Release\net7.0-windows\Eco.WorldGenerator.dll')">..\..\Eco\Server\Eco.WorldGenerator\bin\Release\net7.0-windows\Eco.WorldGenerator.dll</HintPath>
     </Reference>
   </ItemGroup>
 
