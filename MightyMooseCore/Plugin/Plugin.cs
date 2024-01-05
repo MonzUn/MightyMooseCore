@@ -53,7 +53,14 @@ namespace Eco.Moose.Plugins
             else
                 Logger.Info($"Plugin version is {InstalledVersion.ToString(3)}");
 
+            PluginManager.Controller.RunIfOrWhenInited(PostServerInitialize); // Defer some initialization for when the server initialization is completed
+
             Status = "Running";
+        }
+
+        private async void PostServerInitialize()
+        {
+            Logger.PostServerInit();
         }
     }
 }

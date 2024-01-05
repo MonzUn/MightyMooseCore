@@ -9,6 +9,9 @@ namespace Eco.Moose.Tools.Logger
 {
     public static class Logger
     {
+        private static bool serverInited = false;
+        private static Mutex registerMutex = new Mutex();
+
         public enum LogLevel
         {
             Trace, // Trace log messages are only written to the log file if enabled via configuration
@@ -38,6 +41,11 @@ namespace Eco.Moose.Tools.Logger
 
         private static Dictionary<Assembly, LogData> Loggers = new();
 
+        public static void PostServerInit()
+        {
+            serverInited = true;
+        }
+
         public static bool RegisterLogger(string tag, ConsoleColor tagColor, LogLevel configuredLevel)
         {
             Assembly caller = Assembly.GetCallingAssembly();
@@ -54,7 +62,10 @@ namespace Eco.Moose.Tools.Logger
                 Log = NLogManager.GetLogWriter(tag),
             };
 
+            registerMutex.WaitOne();
             Loggers.Add(caller, data);
+            registerMutex.ReleaseMutex();
+
             return true;
         }
 
@@ -88,7 +99,17 @@ namespace Eco.Moose.Tools.Logger
 
         private static void Write(string message, LogLevel level, Assembly caller, Exception? exception = null, bool onlyPrintConsoleIfDebug = false)
         {
-            if (Loggers.TryGetValue(caller, out LogData logData))
+            // Protect the logger register from being used while a registration is in progress during server init
+            bool lockedMutex = false;
+            if (!serverInited)
+                lockedMutex = registerMutex.WaitOne();
+
+            bool foundLogData = Loggers.TryGetValue(caller, out LogData logData);
+
+            if (lockedMutex)
+                registerMutex.ReleaseMutex();
+
+            if (foundLogData)
             {
                 switch (level)
                 {
@@ -121,7 +142,7 @@ namespace Eco.Moose.Tools.Logger
                     case LogLevel.Error:
                         if (logData.ConfiguredLevel <= LogLevel.Error && (!onlyPrintConsoleIfDebug || logData.ConfiguredLevel <= LogLevel.Debug))
                         {
-                            if(exception != null)
+                            if (exception != null)
                             {
                                 message += $"\nException: {exception}";
                             }
@@ -137,6 +158,16 @@ namespace Eco.Moose.Tools.Logger
                         break;
                 }
             }
+            else
+            {
+                ConsoleOutputComponent[] components = new[]
+                {
+                    new ConsoleOutputComponent(Localizer.DoStr($"[{MightyMooseCore.Obj.PluginName}] "), ConsoleColor.Green),
+                    new ConsoleOutputComponent(Localizer.DoStr($"[{LogLevel.Error}] "), LogLevelColors[(int)LogLevel.Error]),
+                    new ConsoleOutputComponent(Localizer.DoStr($"Assembly \"{caller.GetName()}\" attempted to log without first registering a logger.\nMessage: {message}"), LogLevelColors[(int)LogLevel.Error]),
+                };
+                PrintConsoleColored(components);
+            }
         }
 
         private static string FormatLogMessage(string message, LogLevel level) => ($"[{level}] {message}");
@@ -148,7 +179,7 @@ namespace Eco.Moose.Tools.Logger
                     new ConsoleOutputComponent(Localizer.DoStr($"[{logData.Tag}] "), logData.TagColor),
                     new ConsoleOutputComponent(Localizer.DoStr($"[{level}] "), LogLevelColors[(int)level]),
                     new ConsoleOutputComponent(Localizer.DoStr(message), LogLevelColors[(int)level]),
-                };
+            };
             PrintConsoleColored(components);
         }
     }
