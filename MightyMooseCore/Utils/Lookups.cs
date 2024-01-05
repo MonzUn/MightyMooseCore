@@ -31,14 +31,14 @@ namespace Eco.Moose.Utils.Lookups
         public static IEnumerable<User> Users => UserManager.Users;
         public static IEnumerable<User> UsersAlphabetical => UserManager.Users.OrderBy(user => user.Name);
         public static User UserByName(string userName) => UserManager.FindUserByName(userName);
-        public static User UserByEcoID(int userID) => UserManager.FindUserByID(userID);
-        public static User UserByNameOrEcoID(string userNameOrID) => int.TryParse(userNameOrID, out int ID) ? UserByEcoID(ID) : UserByName(userNameOrID);
+        public static User UserByID(int userID) => UserManager.FindUserByID(userID);
+        public static User UserByNameOrID(string userNameOrID) => int.TryParse(userNameOrID, out int ID) ? UserByID(ID) : UserByName(userNameOrID);
         public static User UserBySteamOrSLGID(string steamID, string slgID) => UserManager.FindUserById(steamID, slgID);
         public static IEnumerable<User> OnlineUsers => UserManager.OnlineUsers.NonNull().Where(user => user.Client != null && user.Client.Connected);
         public static IEnumerable<User> OnlineUsersAlphabetical => OnlineUsers.OrderBy(user => user.Name);
         public static User OnlineUserByName(string userName) => OnlineUsers.FirstOrDefault(user => user.Name.EqualsCaseInsensitive(userName));
-        public static User OnlineUserByEcoID(int userID) => OnlineUsers.FirstOrDefault(user => user.Id == userID);
-        public static User OnlineUserByNameEcoID(string userNameOrID) => int.TryParse(userNameOrID, out int ID) ? OnlineUserByEcoID(ID) : OnlineUserByName(userNameOrID);
+        public static User OnlineUserByID(int userID) => OnlineUsers.FirstOrDefault(user => user.Id == userID);
+        public static User OnlineUserByNameID(string userNameOrID) => int.TryParse(userNameOrID, out int ID) ? OnlineUserByID(ID) : OnlineUserByName(userNameOrID);
         public static User OnlineUserBySteamOrSLGDID(string steamID, string slgID) => OnlineUsers.FirstOrDefault(user => user.SteamId.Equals(steamID) || user.SlgId.Equals(slgID));
 
         public static IEnumerable<Election> ActiveElections => ElectionManager.Obj.CurrentElections(null).Where(election => election.Valid() && election.State == Shared.Items.ProposableState.Active);
