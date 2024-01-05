@@ -1,4 +1,4 @@
-﻿using Eco.Moose.Tools;
+﻿using Eco.Moose.Tools.Logger;
 using System.ComponentModel;
 
 namespace Eco.Moose.Plugins

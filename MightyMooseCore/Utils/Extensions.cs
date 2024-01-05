@@ -8,8 +8,10 @@ using Eco.Gameplay.Objects;
 using Eco.Gameplay.Property;
 using Eco.Shared.Utils;
 
-namespace Eco.Moose.Utils
+namespace Eco.Moose.Utils.Extensions
 {
+    using Constants = Constants.Constants;
+
     public static class Extensions
     {
         #region User

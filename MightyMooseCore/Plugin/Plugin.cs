@@ -2,7 +2,8 @@
 using Eco.Core.Plugins;
 using Eco.Core.Plugins.Interfaces;
 using Eco.Core.Utils;
-using Eco.Moose.Tools;
+using Eco.Moose.Tools.Logger;
+using Eco.Moose.Tools.VersionChecker;
 using System.Reflection;
 
 namespace Eco.Moose.Plugins

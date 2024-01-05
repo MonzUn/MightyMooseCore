@@ -1,8 +1,8 @@
 ﻿using Eco.Core.Serialization;
-using Eco.Moose.Tools;
+using Eco.Moose.Tools.Logger;
 using System.Reflection;
 
-namespace Eco.Moose.Utils
+namespace Eco.Moose.Utils.Persistance
 {
     public static class Persistance
     {

@@ -17,6 +17,8 @@ using User = Eco.Gameplay.Players.User;
 
 namespace Eco.Moose.Utils.Lookups
 {
+    using Constants = Constants.Constants;
+
     public static class Lookups
     {
         public static double SecondsPassedOnDay => Simulation.Time.WorldTime.Seconds % Constants.SECONDS_PER_DAY;

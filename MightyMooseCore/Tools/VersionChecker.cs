@@ -3,10 +3,12 @@ using Eco.ModKit;
 using Eco.Shared.Utils;
 using System.Diagnostics;
 using System.Reflection;
-using static Eco.Moose.Utils.Console;
+using static Eco.Moose.Utils.Console.Console;
 
-namespace Eco.Moose.Tools
+namespace Eco.Moose.Tools.VersionChecker
 {
+    using Eco.Moose.Tools.Logger;
+
     public static class VersionChecker
     {
         private static HttpClient _client = new();
