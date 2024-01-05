@@ -3,11 +3,11 @@ using Eco.ModKit;
 using Eco.Shared.Utils;
 using System.Diagnostics;
 using System.Reflection;
-using static Eco.Moose.Utils.Console.Console;
 
 namespace Eco.Moose.Tools.VersionChecker
 {
     using Eco.Moose.Tools.Logger;
+    using static Eco.Moose.Utils.Console;
 
     public static class VersionChecker
     {
