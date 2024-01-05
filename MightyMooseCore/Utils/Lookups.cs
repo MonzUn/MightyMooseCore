@@ -7,6 +7,7 @@ using Eco.Gameplay.Civics.Laws;
 using Eco.Gameplay.Civics.Titles;
 using Eco.Gameplay.Economy;
 using Eco.Gameplay.Economy.WorkParties;
+using Eco.Gameplay.Items;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Property;
 using Eco.Gameplay.Settlements;
@@ -87,5 +88,7 @@ namespace Eco.Moose.Utils.Lookups
 
         public static IEnumerable<Skill> Professions => SkillTree.ProfessionSkillTrees.Select(skilltree => skilltree.StaticSkill);
         public static Skill ProfessionByName(string professionName) => Professions.FirstOrDefault(profession => profession.Name.EqualsCaseInsensitive(professionName));
+
+        public static IEnumerable<FoodItem> FoodItems => Item.AllItemsIncludingHidden.OfType<FoodItem>();
     }
 }
