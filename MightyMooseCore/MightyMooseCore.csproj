@@ -10,7 +10,7 @@
     <AssemblyName>MightyMooseCore</AssemblyName>
     <RootNamespace>Eco.Moose</RootNamespace>
     <OutputType>Library</OutputType>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
