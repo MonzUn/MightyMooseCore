@@ -4,6 +4,8 @@ using Eco.Core.Plugins.Interfaces;
 using Eco.Core.Utils;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Tools.VersionChecker;
+using Eco.Shared.Utils;
+using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
 namespace Eco.Moose.Plugins
@@ -14,6 +16,10 @@ namespace Eco.Moose.Plugins
         public readonly Version InstalledVersion = Assembly.GetExecutingAssembly().GetName().Version;
         public Version? ModIOVersion { get; private set; } = null;
         public readonly string PluginName = "MightyMooseCore";
+
+        public static readonly IConfiguration Secrets = new ConfigurationBuilder().AddUserSecrets<MightyMooseCore>().Build();
+        private static string ModIODeveloperToken = Secrets["ModIODeveloperToken"];
+        private const string ModIOAppID = "3561559";
 
         public static MightyMooseCore Obj { get { return PluginManager.GetPlugin<MightyMooseCore>(); } }
         public ThreadSafeAction<object, string> ParamChanged { get; set; }
@@ -30,8 +36,6 @@ namespace Eco.Moose.Plugins
 
         private readonly PluginConfig<MightyMooseCoreConfig> config = new PluginConfig<MightyMooseCoreConfig>("MightyMooseCore");
 
-        private const string ModIODeveloperToken = ""; // This will always be empty for all but actual release builds.
-        private const string ModIOAppID = "3561559";
 
         public override string ToString() => "Mighty Moose Core";
         public string GetCategory() => "Mighty Moose";
