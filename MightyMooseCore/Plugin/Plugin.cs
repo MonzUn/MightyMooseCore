@@ -13,9 +13,9 @@ namespace Eco.Moose.Plugins
     [Priority(PriorityAttribute.VeryHigh)] // Need to start before any dependent plugins
     public class MightyMooseCore : IModKitPlugin, IInitializablePlugin, IConfigurablePlugin
     {
+        public readonly string PluginName = "MightyMooseCore";
         public readonly Version InstalledVersion = Assembly.GetExecutingAssembly().GetName().Version;
         public Version? ModIOVersion { get; private set; } = null;
-        public readonly string PluginName = "MightyMooseCore";
 
         public static readonly IConfiguration Secrets = new ConfigurationBuilder().AddUserSecrets<MightyMooseCore>().Build();
         private static string ModIODeveloperToken = Secrets["ModIODeveloperToken"];
@@ -36,8 +36,7 @@ namespace Eco.Moose.Plugins
 
         private readonly PluginConfig<MightyMooseCoreConfig> config = new PluginConfig<MightyMooseCoreConfig>("MightyMooseCore");
 
-
-        public override string ToString() => "Mighty Moose Core";
+        public override string ToString() => PluginName.AddSpacesBetweenCapitals();
         public string GetCategory() => "Mighty Moose";
         public string GetStatus() => Status;
         public IPluginConfig PluginConfig => config;
