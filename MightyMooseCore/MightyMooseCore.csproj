@@ -61,6 +61,11 @@
       <HintPath Condition="Exists('..\..\Eco\Server\Eco.WorldGenerator\bin\Release\net7.0-windows\Eco.WorldGenerator.dll')">..\..\Eco\Server\Eco.WorldGenerator\bin\Release\net7.0-windows\Eco.WorldGenerator.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="StrangeCloud.Service.Client.CSharp">
+      <HintPath Condition="Exists('..\Dependencies\StrangeCloud.Service.Client.CSharp.dll')">..\Dependencies\StrangeCloud.Service.Client.CSharp.dll</HintPath>
+      <HintPath Condition="Exists('..\..\Eco\Server\bin\Release\net7.0-windows\StrangeCloud.Service.Client.CSharp.dll')">..\..\Eco\Server\bin\Release\net7.0-windows\StrangeCloud.Service.Client.CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 
 </Project>
