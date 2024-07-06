@@ -1,9 +1,11 @@
 ﻿using Eco.Core.Utils.Logging;
 using Eco.Moose.Plugin;
 using Eco.Shared.Localization;
+using Eco.Shared.Logging;
+using Eco.Shared.Utils;
 using System.Reflection;
+
 using static Eco.Moose.Utils.Console;
-using static Eco.Shared.Utils.ILogWriter;
 
 namespace Eco.Moose.Tools.Logger
 {
@@ -148,8 +150,7 @@ namespace Eco.Moose.Tools.Logger
                             }
                             PrintToConsole(message, LogLevel.Error, logData);
                         }
-
-                        ErrorInfo errorInfo = new ErrorInfo(FormatLogMessage(message, LogLevel.Error), exception);
+                        ILogWriter.ErrorInfo errorInfo = new ILogWriter.ErrorInfo(message, exception);
                         logData.Log.WriteError(ref errorInfo, stripTagsForConsole: true);
                         break;
 
