@@ -2,24 +2,35 @@
 using Eco.Core.Plugins;
 using Eco.Core.Plugins.Interfaces;
 using Eco.Core.Utils;
+using Eco.Gameplay.Aliases;
+using Eco.Gameplay.GameActions;
+using Eco.Gameplay.Property;
+using Eco.Moose.Events;
+using Eco.Moose.Events.Converter;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Tools.VersionChecker;
 using Eco.Shared.Utils;
+using Eco.WorldGenerator;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
-namespace Eco.Moose.Plugins
+namespace Eco.Moose.Plugin
 {
     [Priority(PriorityAttribute.VeryHigh)] // Need to start before any dependent plugins
-    public class MightyMooseCore : IModKitPlugin, IInitializablePlugin, IConfigurablePlugin
+    public class MightyMooseCore : IModKitPlugin, IInitializablePlugin, IShutdownablePlugin, IConfigurablePlugin, IGameActionAware
     {
         public readonly string PluginName = "MightyMooseCore";
         public readonly Version InstalledVersion = Assembly.GetExecutingAssembly().GetName().Version;
         public Version? ModIOVersion { get; private set; } = null;
 
         public static readonly IConfiguration Secrets = new ConfigurationBuilder().AddUserSecrets<MightyMooseCore>().Build();
+        public static readonly ThreadSafeAction<MooseEventArgs> OnEventFired = new ThreadSafeAction<MooseEventArgs>();
+
         private static string ModIODeveloperToken = Secrets["ModIODeveloperToken"];
         private const string ModIOAppID = "3561559";
+
+        private bool _triggerWorldResetEvent = false;
+        private Action<MooseEventArgs> OnEventConverted;
 
         public static MightyMooseCore Obj { get { return PluginManager.GetPlugin<MightyMooseCore>(); } }
         public ThreadSafeAction<object, string> ParamChanged { get; set; }
@@ -43,12 +54,21 @@ namespace Eco.Moose.Plugins
         public MightyMooseCoreConfig ConfigData => config.Config;
         public object GetEditObject() => config.Config;
         public void OnEditObjectChanged(object o, string param) => ConfigData.OnConfigChanged(param);
+        public LazyResult ShouldOverrideAuth(IAlias alias, IOwned property, GameAction action) => LazyResult.FailedNoMessage;
 
         public async void Initialize(TimedTask timer)
         {
+            InitCallbacks();
+
             Logger.RegisterLogger(PluginName, ConsoleColor.Green, ConfigData.LogLevel);
 
             Status = "Initializing";
+
+            MooseStorage.Instance.Initialize();
+
+            WorldGeneratorPlugin.OnFinishGenerate.AddUnique(this.HandleWorldReset);
+
+            EventConverter.Instance.Initialize();
 
             // Check mod versioning if the required data exists
             if (!string.IsNullOrWhiteSpace(ModIOAppID) && !string.IsNullOrWhiteSpace(ModIODeveloperToken))
@@ -64,6 +84,69 @@ namespace Eco.Moose.Plugins
         private async void PostServerInitialize()
         {
             Logger.PostServerInit();
+
+            if (_triggerWorldResetEvent)
+            {
+                await HandleEvent(EventType.WorldReset, null);
+                _triggerWorldResetEvent = false;
+            }
+
+            RegisterCallbacks();
+        }
+
+        public async Task ShutdownAsync()
+        {
+            DeregisterCallbacks();
+
+            MooseStorage.Instance.Shutdown();
+        }
+
+        private void InitCallbacks()
+        {
+            OnEventConverted = async args => await HandleEvent(args.EventType, args.Data);
+        }
+
+        private void RegisterCallbacks()
+        {
+            EventConverter.OnEventConverted.Add(OnEventConverted);
+            ActionUtil.AddListener(this);
+        }
+
+        private void DeregisterCallbacks()
+        {
+            EventConverter.OnEventConverted.Remove(OnEventConverted);
+            ActionUtil.RemoveListener(this);
+        }
+
+        public void ActionPerformed(GameAction action)
+        {
+            switch (action)
+            {
+                case CurrencyTrade currencyTrade:
+                    _ = HandleEvent(EventType.Trade, currencyTrade);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        public async Task HandleEvent(EventType eventType, params object[] data)
+        {
+            Logger.Trace($"Event of type {eventType} received");
+
+            EventConverter.Instance.HandleEvent(eventType, data);
+            MooseStorage.Instance.HandleEvent(eventType, data);
+
+            if((long)eventType > EventConstants.INTERNAL_EVENT_DIVIDER)
+            {
+                OnEventFired.Invoke(new MooseEventArgs(eventType, data));
+            }
+        }
+
+        public void HandleWorldReset()
+        {
+            _triggerWorldResetEvent = true;
         }
     }
 }

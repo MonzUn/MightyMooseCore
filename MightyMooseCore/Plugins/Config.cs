@@ -1,7 +1,7 @@
 ﻿using Eco.Moose.Tools.Logger;
 using System.ComponentModel;
 
-namespace Eco.Moose.Plugins
+namespace Eco.Moose.Plugin
 {
     public class MightyMooseCoreConfig
     {

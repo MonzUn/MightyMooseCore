@@ -1,5 +1,5 @@
 ﻿using Eco.Core.Utils.Logging;
-using Eco.Moose.Plugins;
+using Eco.Moose.Plugin;
 using Eco.Shared.Localization;
 using System.Reflection;
 using static Eco.Moose.Utils.Console;

@@ -53,7 +53,7 @@ namespace Eco.Moose.Utils.Extensions
 
         #region Deed
 
-        public static int GetTotalPlotSize(this Deed deed) => deed.Plots.Count() * Constants.ECO_PLOT_SIZE_M2;
+        public static int GetTotalPlotSize(this Deed deed) => deed.Plots.Count() * Constants.PLOT_SIZE_M2;
 
         public static bool IsVehicle(this Deed deed) => deed.OwnedObjects.Select(handle => handle.OwnedObject).OfType<WorldObject>().Any(x => x?.HasComponent<VehicleComponent>() == true);
 
