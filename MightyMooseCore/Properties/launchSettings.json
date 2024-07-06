@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "EcoWorldCore": {
+    "MightyMooseCore": {
       "commandName": "Executable",
       "executablePath": "$(SolutionDir)../Eco/Server\\bin\\Debug\\net7.0-windows\\EcoServer.exe",
       "workingDirectory": "$(SolutionDir)../Eco/Server\\bin\\Debug\\net7.0-windows"
