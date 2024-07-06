@@ -5,6 +5,7 @@ using Eco.Gameplay.Civics.Demographics;
 using Eco.Gameplay.Civics.Elections;
 using Eco.Gameplay.Civics.Laws;
 using Eco.Gameplay.Civics.Titles;
+using Eco.Gameplay.Disasters;
 using Eco.Gameplay.Economy;
 using Eco.Gameplay.Economy.WorkParties;
 using Eco.Gameplay.Items;
@@ -14,6 +15,7 @@ using Eco.Gameplay.Settlements;
 using Eco.Gameplay.Skills;
 using Eco.Shared.Items;
 using Eco.Shared.Utils;
+using Eco.Simulation.Time;
 using User = Eco.Gameplay.Players.User;
 
 namespace Eco.Moose.Utils.Lookups
@@ -22,8 +24,10 @@ namespace Eco.Moose.Utils.Lookups
 
     public static class Lookups
     {
-        public static double SecondsPassedOnDay => Simulation.Time.WorldTime.Seconds % Constants.SECONDS_PER_DAY;
+        public static double SecondsPassedTotal => WorldTime.Seconds;
+        public static double SecondsPassedOnDay => WorldTime.Seconds % Constants.SECONDS_PER_DAY;
         public static double SecondsLeftOnDay => Constants.SECONDS_PER_DAY - SecondsPassedOnDay;
+        public static double SecondsLeftUntilMeteor => TimeUtil.DaysToSeconds(DisasterPlugin.MeteorImpactTime) - SecondsPassedTotal;
 
         public static int NumTotalPlayers => Users.Count();
         public static int NumOnlinePlayers => OnlineUsers.Count();
