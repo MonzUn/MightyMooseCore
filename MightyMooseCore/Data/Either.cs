@@ -1,4 +1,4 @@
-﻿namespace Eco.Moose.Utils
+﻿namespace Eco.Moose.Data
 {
     public struct Either<T1, T2, T3, T4> where T1 : class where T2 : class where T3 : class where T4 : class
     {
@@ -31,7 +31,7 @@
 
         public readonly override int GetHashCode()
         {
-            return (_value != null ? _value.GetHashCode() : 0);
+            return _value != null ? _value.GetHashCode() : 0;
         }
     }
 }
