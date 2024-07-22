@@ -12,14 +12,13 @@ using Eco.Gameplay.Players;
 using Eco.Gameplay.Property;
 using Eco.Gameplay.Settlements;
 using Eco.Gameplay.Skills;
+using Eco.Moose.Data.Constants;
 using Eco.Shared.Items;
 using Eco.Shared.Utils;
 using User = Eco.Gameplay.Players.User;
 
 namespace Eco.Moose.Utils.Lookups
 {
-    using Constants = Constants.Constants;
-
     public static class Lookups
     {
         public static double SecondsPassedOnDay => Simulation.Time.WorldTime.Seconds % Constants.SECONDS_PER_DAY;

@@ -5,17 +5,16 @@ using Eco.Gameplay.Economy;
 using Eco.Gameplay.Items;
 using Eco.Gameplay.Objects;
 using Eco.Gameplay.Players;
+using Eco.Moose.Extensions;
 using Eco.Moose.Plugin;
-using Eco.Moose.Utils.Extensions;
 using Eco.Shared.IoC;
 using Eco.Shared.Items;
 using Eco.Shared.Utils;
 using System.Text;
-using LookupEntry = Eco.Moose.Utils.Either<Eco.Gameplay.Items.Item, Eco.Gameplay.Players.User, Eco.Gameplay.Items.Tag, Eco.Gameplay.Components.Store.StoreComponent>;
+using LookupEntry = Eco.Moose.Data.Either<Eco.Gameplay.Items.Item, Eco.Gameplay.Players.User, Eco.Gameplay.Items.Tag, Eco.Gameplay.Components.Store.StoreComponent>;
 using StoreOfferList = System.Collections.Generic.IEnumerable<System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>>;
 using StoreOfferGroup = System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>;
-
-using static Eco.Shared.Mathf; // Avoiding collisions with system mathf
+using static Eco.Shared.Mathf;
 
 namespace Eco.Moose.Features
 {

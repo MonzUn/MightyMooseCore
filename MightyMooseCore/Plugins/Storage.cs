@@ -1,8 +1,8 @@
 ﻿using Eco.Moose.Utils.Persistance;
-using Eco.Moose.Utils.Constants;
 using Eco.Gameplay.GameActions;
 using Eco.Moose.Events;
 using Eco.Moose.Tools.Logger;
+using Eco.Moose.Data.Constants;
 
 namespace Eco.Moose.Plugin
 {
@@ -76,7 +76,8 @@ namespace Eco.Moose.Plugin
 
                     foreach (var list in accumulatedTrade)
                     {
-                        if (list.Count <= 0) continue;
+                        if (list.Count <= 0)
+                            continue;
 
                         // Make sure an entry exists for the currency
                         int currencyID = accumulatedTrade.First()[0].Currency.Id;

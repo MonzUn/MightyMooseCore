@@ -1,17 +1,24 @@
-﻿using Eco.Gameplay.Players;
+﻿using Eco.Core.Utils;
+using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.Messaging.Chat.Commands;
+using Eco.Gameplay.Systems.Messaging.Mail;
+using Eco.Moose.Data.Constants;
 using Eco.Moose.Features;
 using Eco.Moose.Tools.Logger;
-using Eco.Moose.Utils.Constants;
 using Eco.Moose.Utils.Message;
 using Eco.Moose.Utils.TextUtils;
+using Eco.Shared.Localization;
 using Eco.Shared.Utils;
+using Eco.Moose.Extensions;
 
+using static Eco.Moose.Data.Enums;
 using static Eco.Moose.Features.Trade;
+
 using StoreOfferList = System.Collections.Generic.IEnumerable<System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>>;
 
 namespace Eco.Moose.Plugin
 {
+    [ChatCommandHandler]
     public class Commands
     {
         #region Commands Base
@@ -90,15 +97,170 @@ namespace Eco.Moose.Plugin
             }, callingUser);
         }
 
-        [ChatSubCommand("Moose", "Opens the documentation web page", ChatAuthorizationLevel.User)]
-        public static void Documentation(User user)
+        [ChatSubCommand("Moose", "Opens the documentation web page.", ChatAuthorizationLevel.User)]
+        public static void Documentation(User callingUser)
         {
             ExecuteCommand<object>((lUser, args) =>
             {
-                user.OpenWebpage("https://mod.io/g/eco/m/mightymoosecore");
-            }, user);
+                callingUser.OpenWebpage("https://mod.io/g/eco/m/mightymoosecore");
+            }, callingUser);
         }
 
+        #endregion
+
+        #region Messaging
+        [ChatSubCommand("Moose", "Announces a message to everyone or a specified user.", "mann", ChatAuthorizationLevel.Admin)]
+        public static void Announce(User callingUser, string message, string messageType = "Notification", User recipient = null)
+        {
+            ExecuteCommand<object>((lUser, args) =>
+            {
+                if (message.IsEmpty())
+                {
+                    ReportCommandError(callingUser, $"Failed to send message - Message can not be empty");
+                    return;
+                }
+
+                if (!Enum.TryParse(messageType, out MessageType messageTypeEnum))
+                {
+                    ReportCommandError(callingUser, $"\"{messageType}\" is not a valid message type. The available message types are: {string.Join(", ", Enum.GetNames(typeof(MessageType)))}");
+                    return;
+                }
+
+                if (recipient != null && messageTypeEnum != MessageType.NotificationOffline && !recipient.IsOnline)
+                {
+                    ReportCommandError(callingUser, $"Failed to send message - {recipient.Name} is offline.");
+                    return;
+                }
+
+                string formattedMessage = messageTypeEnum switch
+                {
+                    MessageType.Chat => $"{callingUser.Name}: {message}",
+                    MessageType.Info => $"{callingUser.Name}: {message}",
+                    MessageType.Warning => $"{callingUser.Name}: {message}",
+                    MessageType.Error => $"{callingUser.Name}: {message}",
+                    MessageType.Notification => $"[{callingUser.Name}]\n\n{message}",
+                    MessageType.NotificationOffline => $"[{callingUser.Name}]\n\n{message}",
+                    MessageType.Popup => $"[{callingUser.Name}]\n{message}",
+                };
+
+                bool result = true;
+                switch (messageTypeEnum)
+                {
+                    case MessageType.Chat:
+                        {
+                            if (recipient != null)
+                            {
+                                result = Message.SendChatToUser(null, recipient, formattedMessage);
+                            }
+                            else
+                            {
+                                result = Message.SendChatToDefaultChannel(null, formattedMessage);
+                            }
+                            break;
+                        }
+
+                    case MessageType.Info:
+                        {
+                            if (recipient != null)
+                            {
+                                result = Message.SendInfoBoxToUser(recipient, formattedMessage);
+                            }
+                            else
+                            {
+                                foreach (User onlineUser in UserManager.OnlineUsers)
+                                {
+                                    result = Message.SendInfoBoxToUser(onlineUser, formattedMessage) && result;
+                                }
+                            }
+                            break;
+                        }
+
+                    case MessageType.Warning:
+                        {
+                            if (recipient != null)
+                            {
+                                result = Message.SendWarningBoxToUser(recipient, formattedMessage);
+                            }
+                            else
+                            {
+                                foreach (User onlineUser in UserManager.OnlineUsers)
+                                {
+                                    result = Message.SendWarningBoxToUser(onlineUser, formattedMessage) && result;
+                                }
+                            }
+                            break;
+                        }
+                    case MessageType.Error:
+                        {
+                            if (recipient != null)
+                            {
+                                result = Message.SendErrorBoxToUser(recipient, formattedMessage);
+                            }
+                            else
+                            {
+                                foreach (User onlineUser in UserManager.OnlineUsers)
+                                {
+                                    result = Message.SendErrorBoxToUser(onlineUser, formattedMessage) && result;
+                                }
+                            }
+                            break;
+                        }
+                    case MessageType.Popup:
+                        {
+                            if (recipient != null)
+                            {
+                                result = Message.SendPopupToUser(recipient, formattedMessage);
+                            }
+                            else
+                            {
+                                foreach (User onlineUser in UserManager.OnlineUsers)
+                                {
+                                    result = Message.SendPopupToUser(onlineUser, formattedMessage) && result;
+                                }
+                            }
+                            break;
+                        }
+                    case MessageType.Notification:
+                        {
+                            if (recipient != null)
+                            {
+                                result = Message.SendNotificationToUser(recipient, message, sendOffline: false);
+                            }
+                            else
+                            {
+                                foreach (User onlineUser in UserManager.OnlineUsers)
+                                {
+                                    result = Message.SendNotificationToUser(onlineUser, formattedMessage, sendOffline: false) && result;
+                                }
+                            }
+                            break;
+                        }
+
+                    case MessageType.NotificationOffline:
+                        {
+                            if (recipient != null)
+                            {
+                                result = Message.SendNotificationToUser(recipient, message, sendOffline: true);
+                            }
+                            else
+                            {
+                                foreach (User user in UserManager.Users)
+                                {
+                                    result = Message.SendNotificationToUser(user, formattedMessage, sendOffline: true) && result;
+                                }
+                            }
+                            break;
+                        }
+                }
+
+                string sendContext = recipient == null ? "everyone" : recipient.Name;
+                if (result)
+                    ReportCommandInfo(callingUser, $"Message sent to {sendContext}.");
+                else
+                    ReportCommandError(callingUser, $"Failed to send message to {sendContext}.");
+
+            }, callingUser);
+        }
         #endregion
 
         #region Features
