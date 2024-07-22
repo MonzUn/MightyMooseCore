@@ -2,20 +2,11 @@
 using Eco.Gameplay.Economy.Transfer;
 using Eco.Gameplay.Economy;
 using Eco.Gameplay.Players;
-using Eco.Gameplay.Items;
-using Eco.Gameplay.Components;
-using Eco.Gameplay.Objects;
-using Eco.Gameplay.Property;
-using Eco.Shared.Utils;
 
-namespace Eco.Moose.Utils.Extensions
+namespace Eco.Moose.Extensions
 {
-    using Constants = Constants.Constants;
-
-    public static class Extensions
+    public static partial class Extensions
     {
-        #region User
-
         public static bool IsWhitelisted(this User user) => UserManager.Config.UserPermission.WhiteList.Contains(user);
         public static bool IsBanned(this User user) => UserManager.Config.UserPermission.BlackList.Contains(user);
         public static bool IsMuted(this User user) => UserManager.Config.UserPermission.MuteList.Contains(user);
@@ -42,23 +33,5 @@ namespace Eco.Moose.Utils.Extensions
             }
             return wealth;
         }
-
-        #endregion
-
-        #region Item
-
-        public static bool HasTagWithName(this Item item, string name) => item.Tags().Any(tag => tag.DisplayName.ToString().EqualsCaseInsensitive(name));
-
-        #endregion
-
-        #region Deed
-
-        public static int GetTotalPlotSize(this Deed deed) => deed.Plots.Count() * Constants.PLOT_SIZE_M2;
-
-        public static bool IsVehicle(this Deed deed) => deed.OwnedObjects.Select(handle => handle.OwnedObject).OfType<WorldObject>().Any(x => x?.HasComponent<VehicleComponent>() == true);
-
-        public static VehicleComponent GetVehicle(this Deed deed) => deed.OwnedObjects.Select(handle => handle.OwnedObject).OfType<WorldObject>().Where(x => x?.HasComponent<VehicleComponent>() == true).FirstOrDefault().GetComponent<VehicleComponent>();
-
-        #endregion
     }
 }
