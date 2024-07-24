@@ -1,8 +1,8 @@
 ﻿using Eco.Gameplay.Components;
 using Eco.Gameplay.Objects;
 using Eco.Gameplay.Property;
-using Eco.Shared.Utils;
 using Eco.Moose.Data.Constants;
+using Eco.Shared.Utils;
 
 namespace Eco.Moose.Extensions
 {

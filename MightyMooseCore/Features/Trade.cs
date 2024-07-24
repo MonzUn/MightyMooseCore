@@ -11,10 +11,10 @@ using Eco.Shared.IoC;
 using Eco.Shared.Items;
 using Eco.Shared.Utils;
 using System.Text;
-using LookupEntry = Eco.Moose.Data.Either<Eco.Gameplay.Items.Item, Eco.Gameplay.Players.User, Eco.Gameplay.Items.Tag, Eco.Gameplay.Components.Store.StoreComponent>;
-using StoreOfferList = System.Collections.Generic.IEnumerable<System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>>;
-using StoreOfferGroup = System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>;
 using static Eco.Shared.Mathf;
+using LookupEntry = Eco.Moose.Data.Either<Eco.Gameplay.Items.Item, Eco.Gameplay.Players.User, Eco.Gameplay.Items.Tag, Eco.Gameplay.Components.Store.StoreComponent>;
+using StoreOfferGroup = System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>;
+using StoreOfferList = System.Collections.Generic.IEnumerable<System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>>;
 
 namespace Eco.Moose.Features
 {

@@ -1,15 +1,12 @@
 ﻿using Eco.Core.Utils;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.Messaging.Chat.Commands;
-using Eco.Gameplay.Systems.Messaging.Mail;
 using Eco.Moose.Data.Constants;
 using Eco.Moose.Features;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Utils.Message;
 using Eco.Moose.Utils.TextUtils;
-using Eco.Shared.Localization;
 using Eco.Shared.Utils;
-using Eco.Moose.Extensions;
 
 using static Eco.Moose.Data.Enums;
 using static Eco.Moose.Features.Trade;

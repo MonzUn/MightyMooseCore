@@ -1,6 +1,6 @@
-﻿using Eco.Gameplay.Economy.Money;
+﻿using Eco.Gameplay.Economy;
+using Eco.Gameplay.Economy.Money;
 using Eco.Gameplay.Economy.Transfer;
-using Eco.Gameplay.Economy;
 using Eco.Gameplay.Players;
 
 namespace Eco.Moose.Extensions

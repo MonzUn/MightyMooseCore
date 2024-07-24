@@ -1,8 +1,8 @@
 ﻿using Eco.Gameplay.Civics.Demographics;
 using Eco.Gameplay.Players;
-using Eco.Gameplay.Systems.Messaging.Chat.Channels;
-using Eco.Gameplay.Systems.Messaging.Chat;
 using Eco.Gameplay.Systems;
+using Eco.Gameplay.Systems.Messaging.Chat;
+using Eco.Gameplay.Systems.Messaging.Chat.Channels;
 using Eco.Gameplay.Utils;
 using Eco.Moose.Tools.Logger;
 using Eco.Shared.Localization;
