@@ -253,9 +253,9 @@ namespace Eco.Moose.Plugin
                         }
                 }
 
-                string sendContext = recipient == null ? "everyone" : recipient.Name;
+                string sendContext = recipient == null ? "all players" : recipient.Name;
                 if (result)
-                    ReportCommandInfo(callingUser, $"Message sent to {sendContext}.");
+                    ReportCommandInfo(callingUser, $"Message delivered to {sendContext}.");
                 else
                     ReportCommandError(callingUser, $"Failed to send message to {sendContext}.");
 
