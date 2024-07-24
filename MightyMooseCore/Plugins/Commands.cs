@@ -120,7 +120,7 @@ namespace Eco.Moose.Plugin
                     return;
                 }
 
-                if (!Enum.TryParse(messageType, out MessageType messageTypeEnum))
+                if (!Enum.TryParse(messageType, ignoreCase: true, out MessageType messageTypeEnum))
                 {
                     ReportCommandError(callingUser, $"\"{messageType}\" is not a valid message type. The available message types are: {string.Join(", ", Enum.GetNames(typeof(MessageType)))}");
                     return;
