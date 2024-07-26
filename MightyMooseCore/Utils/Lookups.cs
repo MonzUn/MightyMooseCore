@@ -4,6 +4,7 @@ using Eco.Gameplay.Civics;
 using Eco.Gameplay.Civics.Demographics;
 using Eco.Gameplay.Civics.Elections;
 using Eco.Gameplay.Civics.Laws;
+using Eco.Gameplay.Civics.Misc;
 using Eco.Gameplay.Civics.Titles;
 using Eco.Gameplay.Economy;
 using Eco.Gameplay.Economy.WorkParties;
@@ -15,6 +16,7 @@ using Eco.Gameplay.Skills;
 using Eco.Moose.Data.Constants;
 using Eco.Shared.Items;
 using Eco.Shared.Utils;
+using System.Linq;
 using User = Eco.Gameplay.Players.User;
 
 namespace Eco.Moose.Utils.Lookups
@@ -42,6 +44,12 @@ namespace Eco.Moose.Utils.Lookups
         public static User OnlineUserBySteamOrSLGDID(string steamID, string slgID) => OnlineUsers.FirstOrDefault(user => user.SteamId.Equals(steamID) || user.SlgId.Equals(slgID));
 
         public static IEnumerable<Election> ActiveElections => ElectionManager.Obj.CurrentElections(null).Where(election => election.Valid() && election.State == Shared.Items.ProposableState.Active);
+        public static IEnumerable<Settlement> Settlements => Registrars.Get<Settlement>().NonNull();
+        public static IEnumerable<Settlement> ActiveSettlements => Settlements.Where(settlement => settlement.IsActive);
+        public static IEnumerable<Settlement> SettlementsWithActiveUsers => ActiveSettlements.Where(settlement => settlement.Citizens.Any(user => user.IsActive));
+        public static Settlement SettlementByName(string settlementName) => Settlements.FirstOrDefault(settlement => settlement.Name.EqualsCaseInsensitive(settlementName));
+        public static Settlement SettlementByID(int settlementID) => Settlements.FirstOrDefault(settlement => settlement.Id == settlementID);
+        public static Settlement SettlementByNameOrID(string settlementNameOrID) => int.TryParse(settlementNameOrID, out int ID) ? SettlementByID(ID) : SettlementByName(settlementNameOrID);
         public static Election ActiveElectionByName(string electionName) => ActiveElections.FirstOrDefault(election => election.Name.EqualsCaseInsensitive(electionName));
         public static Election ActiveElectionByID(int electionID) => ActiveElections.FirstOrDefault(election => election.Id == electionID);
         public static Election ActiveElectionByNameOrID(string electionNameOrID) => int.TryParse(electionNameOrID, out int ID) ? ActiveElectionByID(ID) : ActiveElectionByName(electionNameOrID);
