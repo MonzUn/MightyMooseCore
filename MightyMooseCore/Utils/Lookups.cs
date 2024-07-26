@@ -77,7 +77,7 @@ namespace Eco.Moose.Utils.Lookups
         public static ElectedTitle ActiveElectedTitleByID(int electedTitleID) => ActiveElectedTitles.FirstOrDefault(wp => wp.Id == electedTitleID);
         public static ElectedTitle ActiveElectedTitleByNameOrID(string electedTitleNameOrID) => int.TryParse(electedTitleNameOrID, out int ID) ? ActiveElectedTitleByID(ID) : ActiveElectedTitleByName(electedTitleNameOrID);
 
-        public static IEnumerable<AppointedTitle> ActiveAppointedTitles => Registrars.Get<AppointedTitle>().NonNull().Where(t => t.UserSet.Count() > 0);
+        public static IEnumerable<AppointedTitle> ActiveAppointedTitles => Registrars.Get<Title>().NonNull().Where(t => t is AppointedTitle && ((AppointedTitle)t).DirectOccupants.Count() > 0).Cast<AppointedTitle>();
         public static AppointedTitle ActiveAppointedTitleByName(string appointedTitleName) => ActiveAppointedTitles.FirstOrDefault(t => t.Name.EqualsCaseInsensitive(appointedTitleName));
         public static AppointedTitle ActiveAppointedTitleByID(int appointedTitleID) => ActiveAppointedTitles.FirstOrDefault(wp => wp.Id == appointedTitleID);
         public static AppointedTitle ActiveAppointedTitleByNameOrID(string appointedTitleNameOrID) => int.TryParse(appointedTitleNameOrID, out int ID) ? ActiveAppointedTitleByID(ID) : ActiveAppointedTitleByName(appointedTitleNameOrID);
