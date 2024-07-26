@@ -1,6 +1,4 @@
 ﻿using Eco.Core.Systems;
-using Eco.Core.Utils;
-using Eco.Gameplay.Civics;
 using Eco.Gameplay.Civics.Demographics;
 using Eco.Gameplay.Civics.Elections;
 using Eco.Gameplay.Civics.Laws;
@@ -16,7 +14,6 @@ using Eco.Gameplay.Skills;
 using Eco.Moose.Data.Constants;
 using Eco.Shared.Items;
 using Eco.Shared.Utils;
-using System.Linq;
 using User = Eco.Gameplay.Players.User;
 
 namespace Eco.Moose.Utils.Lookups

@@ -7,7 +7,6 @@ using Eco.Gameplay.Aliases;
 using Eco.Gameplay.GameActions;
 using Eco.Gameplay.Property;
 using Eco.Gameplay.Settlements;
-using Eco.Gameplay.Settlements.Civics;
 using Eco.Moose.Events;
 using Eco.Moose.Events.Converter;
 using Eco.Moose.Tools.Logger;
