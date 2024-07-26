@@ -73,17 +73,16 @@ namespace Eco.Moose.Utils.Lookups
         public static WorkParty ActiveWorkPartyByID(int workPartyID) => ActiveWorkParties.FirstOrDefault(wp => wp.Id == workPartyID);
         public static WorkParty ActiveWorkPartyByNameOrID(string workPartyNameOrID) => int.TryParse(workPartyNameOrID, out int ID) ? ActiveWorkPartyByID(ID) : ActiveWorkPartyByName(workPartyNameOrID);
 
+        public static IEnumerable<ElectedTitle> ActiveElectedTitles => ActiveSettlements.SelectMany(ActiveElectedTitlesForSettlement);
+        public static IEnumerable<ElectedTitle> ActiveElectedTitlesForSettlement(Settlement settlement) => CivicsUtils.AllActive<ElectedTitle>(settlement);
+        public static ElectedTitle ActiveElectedTitleByName(string electedTitleName) => ActiveElectedTitles.FirstOrDefault(t => t.Name.EqualsCaseInsensitive(electedTitleName));
+        public static ElectedTitle ActiveElectedTitleByID(int electedTitleID) => ActiveElectedTitles.FirstOrDefault(wp => wp.Id == electedTitleID);
+        public static ElectedTitle ActiveElectedTitleByNameOrID(string electedTitleNameOrID) => int.TryParse(electedTitleNameOrID, out int ID) ? ActiveElectedTitleByID(ID) : ActiveElectedTitleByName(electedTitleNameOrID);
 
-        public static IEnumerable<Title> ActiveTitles => Registrars.All<Title>().Where(x => x.CachedValidity == Result.Succeeded);
-        public static Title ActiveTitleByName(string titleName) => ActiveTitles.FirstOrDefault(title => title.Name.EqualsCaseInsensitive(titleName));
-        public static Title ActiveTitleByID(int titleID) => ActiveTitles.FirstOrDefault(title => title.Id == titleID);
-        public static Title ActiveTitleByNameOrID(string titleNameOrID) => int.TryParse(titleNameOrID, out int ID) ? ActiveTitleByID(ID) : ActiveTitleByName(titleNameOrID);
-
-        public static IEnumerable<Settlement> Settlements => Registrars.Get<Settlement>().NonNull().Where(settlement => settlement.Founded);
-        public static IEnumerable<Settlement> ActiveSettlements => Settlements.Where(settlement => settlement.Citizens.Any(user => user.IsActive));
-        public static Settlement SettlementByName(string settlementName) => Settlements.FirstOrDefault(settlement => settlement.Name.EqualsCaseInsensitive(settlementName));
-        public static Settlement SettlementByID(int settlementID) => Settlements.FirstOrDefault(settlement => settlement.Id == settlementID);
-        public static Settlement SettlementByNameOrID(string settlementNameOrID) => int.TryParse(settlementNameOrID, out int ID) ? SettlementByID(ID) : SettlementByName(settlementNameOrID);
+        public static IEnumerable<AppointedTitle> ActiveAppointedTitles => Registrars.Get<AppointedTitle>().NonNull().Where(t => t.UserSet.Count() > 0);
+        public static AppointedTitle ActiveAppointedTitleByName(string appointedTitleName) => ActiveAppointedTitles.FirstOrDefault(t => t.Name.EqualsCaseInsensitive(appointedTitleName));
+        public static AppointedTitle ActiveAppointedTitleByID(int appointedTitleID) => ActiveAppointedTitles.FirstOrDefault(wp => wp.Id == appointedTitleID);
+        public static AppointedTitle ActiveAppointedTitleByNameOrID(string appointedTitleNameOrID) => int.TryParse(appointedTitleNameOrID, out int ID) ? ActiveAppointedTitleByID(ID) : ActiveAppointedTitleByName(appointedTitleNameOrID);
 
         public static IEnumerable<Currency> Currencies => CurrencyManager.Currencies;
         public static Currency CurrencyByName(string currencyName) => Currencies.FirstOrDefault(c => c.Name.EqualsCaseInsensitive(currencyName));
