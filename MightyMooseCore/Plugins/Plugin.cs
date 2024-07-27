@@ -1,14 +1,17 @@
 ﻿using Eco.Core;
 using Eco.Core.Plugins;
 using Eco.Core.Plugins.Interfaces;
+using Eco.Core.Systems;
 using Eco.Core.Utils;
 using Eco.Gameplay.Aliases;
 using Eco.Gameplay.GameActions;
 using Eco.Gameplay.Property;
+using Eco.Gameplay.Settlements;
 using Eco.Moose.Events;
 using Eco.Moose.Events.Converter;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Tools.VersionChecker;
+using Eco.Moose.Utils.Lookups;
 using Eco.Shared.Utils;
 using Eco.WorldGenerator;
 using Microsoft.Extensions.Configuration;
@@ -109,6 +112,13 @@ namespace Eco.Moose.Plugin
         private void RegisterCallbacks()
         {
             EventConverter.OnEventConverted.Add(OnEventConverted);
+
+            foreach (Settlement settlement in Lookups.ActiveSettlements.Where(s => !s.Founded))
+            {
+                settlement.FoundedEvent.Add(async () => _ = HandleEvent(EventType.SettlementFounded, settlement));
+            }
+            Registrars.Get<Settlement>().Callbacks.OnAdd.Add((netObj, settlement) => ((Settlement)settlement).FoundedEvent.Add(async () => _ = HandleEvent(EventType.SettlementFounded, settlement)));
+
             ActionUtil.AddListener(this);
         }
 

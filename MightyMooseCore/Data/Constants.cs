@@ -1,4 +1,4 @@
-﻿namespace Eco.Moose.Utils.Constants
+﻿namespace Eco.Moose.Data.Constants
 {
     public static class Constants
     {

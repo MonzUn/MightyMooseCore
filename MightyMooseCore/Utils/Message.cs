@@ -1,8 +1,8 @@
 ﻿using Eco.Gameplay.Civics.Demographics;
 using Eco.Gameplay.Players;
-using Eco.Gameplay.Systems.Messaging.Chat.Channels;
-using Eco.Gameplay.Systems.Messaging.Chat;
 using Eco.Gameplay.Systems;
+using Eco.Gameplay.Systems.Messaging.Chat;
+using Eco.Gameplay.Systems.Messaging.Chat.Channels;
 using Eco.Gameplay.Utils;
 using Eco.Moose.Tools.Logger;
 using Eco.Shared.Localization;
@@ -12,18 +12,10 @@ using Eco.Shared.Utils;
 namespace Eco.Moose.Utils.Message
 {
     using Eco.Gameplay.Systems.Messaging.Mail;
-    using Eco.Moose.Utils.Constants;
-    using Text = Eco.Shared.Utils.Text;
+    using Eco.Moose.Data.Constants;
 
     public static class Message
     {
-        public enum BoxMessageType
-        {
-            Info,
-            Warning,
-            Error
-        }
-
         public static void EnsureChatChannelExists(string channelName)
         {
             if (!ChatChannelExists(channelName))
@@ -106,200 +98,69 @@ namespace Eco.Moose.Utils.Message
             return SendChatRaw(sender, $"#{channel} {message}");
         }
 
-        public static bool SendChatToDefaultChannel(User sender, string message)
+        public static bool SendChatToDefaultChannel(User? sender, string message)
         {
             return SendChatRaw(sender, $"#{Constants.DEFAULT_CHAT_CHANNEL_NAME} {message}");
         }
 
-        public static bool SendChatToUser(User sender, User receiver, string message)
+        public static bool SendChatToUser(User? sender, User recipient, string message)
         {
-            return SendChatRaw(sender, $"@{receiver.Name} {message}");
+            return SendChatRaw(sender, $"@{recipient.Name} {message}");
         }
 
-        public static bool SendOKBoxToUser(User receiver, string message)
+        public static bool SendInfoBoxToUser(User recipient, string message)
         {
-            try
-            {
-                receiver?.Player?.OkBoxLoc($"{message}");
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send OKBox to user \"{receiver.Name}\"", e);
+            if (recipient == null || recipient.Player == null)
                 return false;
-            }
+
+            recipient.Msg(Localizer.DoStr(message), Shared.Services.NotificationStyle.InfoBox);
+            return true;
         }
 
-        public static bool SendOKBoxToAll(string message)
+        public static bool SendWarningBoxToUser(User recipient, string message)
         {
-            try
-            {
-                foreach (User receiver in UserManager.OnlineUsers)
-                {
-                    receiver?.Player?.OkBoxLoc($"{message}");
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send OKBox to all users", e);
+            if (recipient == null || recipient.Player == null)
                 return false;
-            }
+
+            recipient.Msg(Localizer.DoStr(message), Shared.Services.NotificationStyle.Warning);
+            return true;
         }
 
-        public static bool SendInfoBoxToUser(User receiver, string message)
+        public static bool SendErrorBoxToUser(User recipient, string message)
         {
-            try
-            {
-                receiver.Msg(Localizer.DoStr(Text.InfoLight(message)));
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send InfoBox to user \"{receiver.Name}\"", e);
+            if (recipient == null || recipient.Player == null)
                 return false;
-            }
+
+            recipient.Msg(Localizer.DoStr(message), Shared.Services.NotificationStyle.Error);
+            return true;
         }
 
-        public static bool SendInfoBoxToAll(string message)
+        public static bool SendPopupToUser(User recipient, string message)
         {
-            try
-            {
-                foreach (User receiver in UserManager.OnlineUsers)
-                {
-                    receiver.Msg(Localizer.DoStr(Text.InfoLight(message)));
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send InfoBox to all users", e);
+            if (recipient == null || recipient.Player == null)
                 return false;
-            }
+
+            recipient.Player.OkBoxLoc($"{message}");
+            return true;
         }
 
-        public static bool SendWarningBoxToUser(User receiver, string message)
+        public static bool SendNotificationToUser(User recipient, string message, bool sendOffline)
         {
-            try
-            {
-                receiver.Msg(Localizer.DoStr(Text.Warning(message)));
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send WarningBox to user \"{receiver.Name}\"", e);
+            if (recipient == null || recipient.Player == null && !sendOffline)
                 return false;
-            }
+
+
+            recipient.Mailbox.Add(new MailMessage(message, "Notifications"), false);
+            return true;
         }
 
-        public static bool SendWarningBoxToAll(string message)
+        public static bool SendInfoPanelToUser(User recipient, string instance, string title, string message)
         {
-            try
-            {
-                foreach (User receiver in UserManager.OnlineUsers)
-                {
-                    receiver.Msg(Localizer.DoStr(Text.Warning(message)));
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send WarningBox to all users", e);
+            if (recipient == null || recipient.Player == null)
                 return false;
-            }
-        }
 
-        public static bool SendErrorBoxToUser(User receiver, string message)
-        {
-            try
-            {
-                receiver.Msg(Localizer.DoStr(Text.Error(message)));
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send ErrorBox to user \"{receiver.Name}\"", e);
-                return false;
-            }
-        }
-
-        public static bool SendErrorBoxToAll(string message)
-        {
-            try
-            {
-                foreach (User receiver in UserManager.OnlineUsers)
-                {
-                    receiver.Msg(Localizer.DoStr(Text.Error(message)));
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send ErrorBox to all users", e);
-                return false;
-            }
-        }
-
-        public static bool SendNotificationToUser(User receiver, string message)
-        {
-            try
-            {
-                receiver.Mailbox.Add(new MailMessage(message, "Notifications"), false);
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send notification to user \"{receiver.Name}\"", e);
-                return false;
-            }
-        }
-
-        public static bool SendNotificationToAll(string message)
-        {
-            try
-            {
-                foreach (User receiver in UserManager.OnlineUsers)
-                {
-                    receiver.Mailbox.Add(new MailMessage(message, "Notifications"), false);
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send notification to all users", e);
-                return false;
-            }
-        }
-
-        public static bool SendInfoPanelToUser(User receiver, string instance, string title, string message)
-        {
-            try
-            {
-                receiver?.Player.OpenInfoPanel(title, message, instance);
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send InfoPanel to user \"{receiver.Name}\"", e);
-                return false;
-            }
-        }
-
-        public static bool SendInfoPanelToAll(string instance, string title, string message)
-        {
-            try
-            {
-                foreach (User receiver in UserManager.OnlineUsers)
-                {
-                    receiver?.Player.OpenInfoPanel(title, message, instance);
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Exception($"Failed to send InfoPanel to all users", e);
-                return false;
-            }
+            recipient.Player.OpenInfoPanel(title, message, instance);
+            return true;
         }
     }
 }
