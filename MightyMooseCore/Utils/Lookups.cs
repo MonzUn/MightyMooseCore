@@ -27,7 +27,7 @@ namespace Eco.Moose.Utils.Lookups
         public static double SecondsPassedTotal => WorldTime.Seconds;
         public static double SecondsPassedOnDay => WorldTime.Seconds % Constants.SECONDS_PER_DAY;
         public static double SecondsLeftOnDay => Constants.SECONDS_PER_DAY - SecondsPassedOnDay;
-        public static double SecondsLeftUntilMeteor => TimeUtil.DaysToSeconds(DisasterPlugin.MeteorImpactTime) - SecondsPassedTotal;
+        public static double SecondsLeftUntilMeteor => TimeUtil.DaysToSeconds(DifficultySettingsConfig.Advanced.MeteorImpactInDays) - SecondsPassedTotal;
 
         public static int NumTotalPlayers => Users.Count();
         public static int NumOnlinePlayers => OnlineUsers.Count();
