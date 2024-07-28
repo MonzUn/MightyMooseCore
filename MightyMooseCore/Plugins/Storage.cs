@@ -80,12 +80,12 @@ namespace Eco.Moose.Plugin
                             continue;
 
                         // Make sure an entry exists for the currency
-                        int currencyID = accumulatedTrade.First()[0].Currency.Id;
-                        if (!WorldData.CurrencyToTradeCountMap.ContainsKey(currencyID))
-                            WorldData.CurrencyToTradeCountMap.Add(currencyID, 0);
+                        int currencyId = accumulatedTrade.First()[0].Currency.Id;
+                        if (!WorldData.CurrencyToTradeCountMap.ContainsKey(currencyId))
+                            WorldData.CurrencyToTradeCountMap.Add(currencyId, 0);
 
-                        WorldData.CurrencyToTradeCountMap.TryGetValue(currencyID, out int tradeCount);
-                        WorldData.CurrencyToTradeCountMap[currencyID] = tradeCount + 1;
+                        WorldData.CurrencyToTradeCountMap.TryGetValue(currencyId, out int tradeCount);
+                        WorldData.CurrencyToTradeCountMap[currencyId] = tradeCount + 1;
                     }
                     break;
 

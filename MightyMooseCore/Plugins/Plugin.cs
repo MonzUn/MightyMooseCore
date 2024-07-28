@@ -24,13 +24,13 @@ namespace Eco.Moose.Plugin
     {
         public readonly string PluginName = "MightyMooseCore";
         public readonly Version InstalledVersion = Assembly.GetExecutingAssembly().GetName().Version;
-        public Version? ModIOVersion { get; private set; } = null;
+        public Version? ModIoVersion { get; private set; } = null;
 
         public static readonly IConfiguration Secrets = new ConfigurationBuilder().AddUserSecrets<MightyMooseCore>().Build();
         public static readonly ThreadSafeAction<MooseEventArgs> OnEventFired = new ThreadSafeAction<MooseEventArgs>();
 
-        private static string ModIODeveloperToken = Secrets["ModIODeveloperToken"];
-        private const string ModIOAppID = "3561559";
+        private static string ModIoDeveloperToken = Secrets["ModIoDeveloperToken"];
+        private const string ModIoAppId = "3561559";
 
         private bool _triggerWorldResetEvent = false;
         private Action<MooseEventArgs> OnEventConverted;
@@ -74,8 +74,8 @@ namespace Eco.Moose.Plugin
             EventConverter.Instance.Initialize();
 
             // Check mod versioning if the required data exists
-            if (!string.IsNullOrWhiteSpace(ModIOAppID) && !string.IsNullOrWhiteSpace(ModIODeveloperToken))
-                ModIOVersion = await VersionChecker.CheckVersion( PluginName, ModIOAppID, ModIODeveloperToken);
+            if (!string.IsNullOrWhiteSpace(ModIoAppId) && !string.IsNullOrWhiteSpace(ModIoDeveloperToken))
+                ModIoVersion = await VersionChecker.CheckVersion( PluginName, ModIoAppId, ModIoDeveloperToken);
             else
                 Logger.Info($"Plugin version is {InstalledVersion.ToString(3)}");
 
