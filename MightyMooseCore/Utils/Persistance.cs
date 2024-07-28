@@ -2,7 +2,6 @@
 using Eco.Moose.Tools.Logger;
 using Nito.AsyncEx;
 using System.Reflection;
-using static Eco.Moose.Tools.Logger.Logger;
 
 namespace Eco.Moose.Utils.Persistance
 {
