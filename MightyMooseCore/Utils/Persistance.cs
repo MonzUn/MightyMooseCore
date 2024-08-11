@@ -1,13 +1,28 @@
 ﻿using Eco.Core.Serialization;
 using Eco.Moose.Tools.Logger;
+using Nito.AsyncEx;
 using System.Reflection;
 
 namespace Eco.Moose.Utils.Persistance
 {
     public static class Persistance
     {
+        private static Dictionary<Assembly, AsyncLock> readWriteLocks = new();
+        private static Mutex registerMutex = new Mutex(); // TODO: Refactor away this by making a general register function for MooseCore where all dependents register themselves and get everything set up at once
+
         public static bool WriteJsonToFile<T>(T data, string directoryPath, string nameAndExtension)
         {
+            Assembly? assembly = Assembly.GetCallingAssembly();
+
+            registerMutex.WaitOne();
+            if(!readWriteLocks.ContainsKey(assembly))
+            {
+                readWriteLocks.Add(assembly, new AsyncLock());
+            }
+
+            readWriteLocks.TryGetValue(assembly, out AsyncLock readWriteLock);
+            registerMutex.ReleaseMutex();
+
             // Serialize data to JSON
             string json;
             try
@@ -47,10 +62,14 @@ namespace Eco.Moose.Utils.Persistance
             // Write JSON to file
             try
             {
-                StreamWriter writer = new StreamWriter(path);
-                writer.Write(json);
-                writer.Flush();
-                Logger.Trace($"Successfully wrote persistance JSON to \"{path}\"", Assembly.GetCallingAssembly());
+                using ( readWriteLock.Lock())
+                {
+                    StreamWriter writer = new StreamWriter(path);
+                    writer.Write(json);
+                    writer.Flush();
+                    Logger.Trace($"Successfully wrote persistance JSON to \"{path}\"", Assembly.GetCallingAssembly());
+                }
+                
                 return true;
             }
             catch (Exception e)
@@ -62,6 +81,17 @@ namespace Eco.Moose.Utils.Persistance
 
         public static bool ReadJsonFromFile<T>(string directoryPath, string nameAndExtension, ref T data)
         {
+            Assembly? assembly = Assembly.GetCallingAssembly();
+
+            registerMutex.WaitOne();
+            if (!readWriteLocks.ContainsKey(assembly))
+            {
+                readWriteLocks.Add(assembly, new AsyncLock());
+            }
+
+            readWriteLocks.TryGetValue(assembly, out AsyncLock readWriteLock);
+            registerMutex.ReleaseMutex();
+
             if (!Directory.Exists(directoryPath))
             {
                 Logger.Silent($"Failed to find directory \"{directoryPath}\" for reading storage file \"{nameAndExtension}\"", Assembly.GetCallingAssembly());
@@ -90,10 +120,13 @@ namespace Eco.Moose.Utils.Persistance
             string jsonStr;
             try
             {
-                StreamReader reader = new StreamReader(path);
-                jsonStr = reader.ReadToEnd();
-                reader.Close();
-                reader.Dispose();
+                using (readWriteLock.Lock())
+                {
+                    StreamReader reader = new StreamReader(path);
+                    jsonStr = reader.ReadToEnd();
+                    reader.Close();
+                    reader.Dispose();
+                }
             }
             catch (Exception e)
             {

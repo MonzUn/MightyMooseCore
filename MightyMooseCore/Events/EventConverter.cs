@@ -72,18 +72,18 @@ namespace Eco.Moose.Events.Converter
                         return;
 
                     // Store the event in a list in order to accumulate trade events that should be considered as one. We do this as each item in a trade will fire an individual event and we want to summarize them
-                    Tuple<int, int> IDTuple = new Tuple<int, int>(tradeEvent.Citizen.Id, (tradeEvent.WorldObject as WorldObject).ID);
+                    Tuple<int, int> IdTuple = new Tuple<int, int>(tradeEvent.Citizen.Id, (tradeEvent.WorldObject as WorldObject).ID);
                     List<CurrencyTrade> trades;
                     using (_accumulatedTradesLock.Lock())
                     {
-                        _accumulatedTrades.TryGetValue(IDTuple, out trades);
+                        _accumulatedTrades.TryGetValue(IdTuple, out trades);
                     }
                     if (trades == null)
                     {
                         trades = new List<CurrencyTrade>();
                         using (_accumulatedTradesLock.Lock())
                         {
-                            _accumulatedTrades.Add(IDTuple, trades);
+                            _accumulatedTrades.Add(IdTuple, trades);
                         }
                     }
                     using (_accumulatedTradesLock.Lock())

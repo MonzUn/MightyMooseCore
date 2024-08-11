@@ -13,6 +13,7 @@ using Eco.Gameplay.Settlements;
 using Eco.Gameplay.Skills;
 using Eco.Moose.Data.Constants;
 using Eco.Shared.Items;
+using Eco.Shared.Time;
 using Eco.Shared.Utils;
 using Eco.Simulation.Time;
 using User = Eco.Gameplay.Players.User;
@@ -33,66 +34,66 @@ namespace Eco.Moose.Utils.Lookups
         public static IEnumerable<User> Users => UserManager.Users;
         public static IEnumerable<User> UsersAlphabetical => UserManager.Users.OrderBy(user => user.Name);
         public static User UserByName(string userName) => UserManager.FindUserByName(userName);
-        public static User UserByID(int userID) => UserManager.FindUserByID(userID);
-        public static User UserByNameOrID(string userNameOrID) => int.TryParse(userNameOrID, out int ID) ? UserByID(ID) : UserByName(userNameOrID);
+        public static User UserById(int userId) => UserManager.FindUserByID(userId);
+        public static User UserByNameOrId(string userNameOrId) => int.TryParse(userNameOrId, out int id) ? UserById(id) : UserByName(userNameOrId);
         public static User UserByStrangeOrSteamID(string strangeID, string steamID) => UserManager.FindUserByStrangeId(strangeID) ?? UserManager.FindUserBySteamId(steamID);
         public static IEnumerable<User> OnlineUsers => UserManager.OnlineUsers.NonNull().Where(user => user.Client != null && user.Client.Connected);
         public static IEnumerable<User> OnlineUsersAlphabetical => OnlineUsers.OrderBy(user => user.Name);
         public static User OnlineUserByName(string userName) => OnlineUsers.FirstOrDefault(user => user.Name.EqualsCaseInsensitive(userName));
-        public static User OnlineUserByID(int userID) => OnlineUsers.FirstOrDefault(user => user.Id == userID);
-        public static User OnlineUserByNameID(string userNameOrID) => int.TryParse(userNameOrID, out int ID) ? OnlineUserByID(ID) : OnlineUserByName(userNameOrID);
+        public static User OnlineUserById(int userId) => OnlineUsers.FirstOrDefault(user => user.Id == userId);
+        public static User OnlineUserByNameId(string userNameOrId) => int.TryParse(userNameOrId, out int id) ? OnlineUserById(id) : OnlineUserByName(userNameOrId);
         public static User OnlineUserByStrangeOrStrangeID(string strangeID, string steamID) => OnlineUsers.FirstOrDefault(user => user.SteamId.Equals(steamID) || user.StrangeId.Equals(strangeID));
 
         public static IEnumerable<Settlement> Settlements => Registrars.Get<Settlement>().NonNull();
         public static IEnumerable<Settlement> ActiveSettlements => Settlements.Where(settlement => settlement.IsActive);
         public static IEnumerable<Settlement> SettlementsWithActiveUsers => ActiveSettlements.Where(settlement => settlement.Citizens.Any(user => user.IsActive));
         public static Settlement SettlementByName(string settlementName) => Settlements.FirstOrDefault(settlement => settlement.Name.EqualsCaseInsensitive(settlementName));
-        public static Settlement SettlementByID(int settlementID) => Settlements.FirstOrDefault(settlement => settlement.Id == settlementID);
-        public static Settlement SettlementByNameOrID(string settlementNameOrID) => int.TryParse(settlementNameOrID, out int ID) ? SettlementByID(ID) : SettlementByName(settlementNameOrID);
+        public static Settlement SettlementById(int settlementId) => Settlements.FirstOrDefault(settlement => settlement.Id == settlementId);
+        public static Settlement SettlementByNameOrId(string settlementNameOrId) => int.TryParse(settlementNameOrId, out int id) ? SettlementById(id) : SettlementByName(settlementNameOrId);
 
         public static IEnumerable<Election> ActiveElections => ActiveSettlements.SelectMany(ActiveElectionsForSettlement);
         public static IEnumerable<Election> ActiveElectionsForSettlement(Settlement settlement) => CivicsUtils.AllActive<Election>(settlement);
         public static Election ActiveElectionByName(string electionName) => ActiveElections.FirstOrDefault(election => election.Name.EqualsCaseInsensitive(electionName));
-        public static Election ActiveElectionByID(int electionID) => ActiveElections.FirstOrDefault(election => election.Id == electionID);
-        public static Election ActiveElectionByNameOrID(string electionNameOrID) => int.TryParse(electionNameOrID, out int ID) ? ActiveElectionByID(ID) : ActiveElectionByName(electionNameOrID);
+        public static Election ActiveElectionById(int electionId) => ActiveElections.FirstOrDefault(election => election.Id == electionId);
+        public static Election ActiveElectionByNameOrId(string electionNameOrId) => int.TryParse(electionNameOrId, out int id) ? ActiveElectionById(id) : ActiveElectionByName(electionNameOrId);
 
         public static IEnumerable<Law> ActiveLaws => ActiveSettlements.SelectMany(ActiveLawsForSettlement);
         public static IEnumerable<Law> ActiveLawsForSettlement(Settlement settlement) => CivicsUtils.AllActive<Law>(settlement);
         public static Law ActiveLawByName(string lawName) => ActiveLaws.FirstOrDefault(law => law.Name.EqualsCaseInsensitive(lawName));
-        public static Law ActiveLawByID(int lawID) => ActiveLaws.FirstOrDefault(law => law.Id == lawID);
-        public static Law ActiveLawByNameByNameOrID(string lawNameOrID) => int.TryParse(lawNameOrID, out int ID) ? ActiveLawByID(ID) : ActiveLawByName(lawNameOrID);
+        public static Law ActiveLawById(int lawId) => ActiveLaws.FirstOrDefault(law => law.Id == lawId);
+        public static Law ActiveLawByNameByNameOrId(string lawNameOrId) => int.TryParse(lawNameOrId, out int id) ? ActiveLawById(id) : ActiveLawByName(lawNameOrId);
 
         public static IEnumerable<Demographic> ActiveDemographics => ActiveSettlements.SelectMany(ActiveDemographicsForSettlement).Concat(DemographicManager.Obj.SpecialEntries);
         public static IEnumerable<Demographic> ActiveDemographicsForSettlement(Settlement settlement) => DemographicManager.Obj.ActiveAndValidDemographics(settlement);
         public static Demographic ActiveDemographicByName(string demographicName) => ActiveDemographics.FirstOrDefault(demographic => demographic.Name.EqualsCaseInsensitive(demographicName));
-        public static Demographic ActiveDemographicByID(int demographicID) => ActiveDemographics.FirstOrDefault(demographic => demographic.Id == demographicID);
-        public static Demographic ActiveDemographicByNameOrID(string demographicNameOrID) => int.TryParse(demographicNameOrID, out int ID) ? ActiveDemographicByID(ID) : ActiveDemographicByName(demographicNameOrID);
+        public static Demographic ActiveDemographicById(int demographicId) => ActiveDemographics.FirstOrDefault(demographic => demographic.Id == demographicId);
+        public static Demographic ActiveDemographicByNameOrId(string demographicNameOrId) => int.TryParse(demographicNameOrId, out int id) ? ActiveDemographicById(id) : ActiveDemographicByName(demographicNameOrId);
 
         public static IEnumerable<WorkParty> ActiveWorkParties => Registrars.Get<WorkParty>().NonNull().Where(wp => wp.State == ProposableState.Active);
         public static WorkParty ActiveWorkPartyByName(string workPartyName) => ActiveWorkParties.FirstOrDefault(wp => wp.Name.EqualsCaseInsensitive(workPartyName));
-        public static WorkParty ActiveWorkPartyByID(int workPartyID) => ActiveWorkParties.FirstOrDefault(wp => wp.Id == workPartyID);
-        public static WorkParty ActiveWorkPartyByNameOrID(string workPartyNameOrID) => int.TryParse(workPartyNameOrID, out int ID) ? ActiveWorkPartyByID(ID) : ActiveWorkPartyByName(workPartyNameOrID);
+        public static WorkParty ActiveWorkPartyById(int workPartyId) => ActiveWorkParties.FirstOrDefault(wp => wp.Id == workPartyId);
+        public static WorkParty ActiveWorkPartyByNameOrId(string workPartyNameOrId) => int.TryParse(workPartyNameOrId, out int id) ? ActiveWorkPartyById(id) : ActiveWorkPartyByName(workPartyNameOrId);
 
         public static IEnumerable<ElectedTitle> ActiveElectedTitles => ActiveSettlements.SelectMany(ActiveElectedTitlesForSettlement);
         public static IEnumerable<ElectedTitle> ActiveElectedTitlesForSettlement(Settlement settlement) => CivicsUtils.AllActive<ElectedTitle>(settlement);
         public static ElectedTitle ActiveElectedTitleByName(string electedTitleName) => ActiveElectedTitles.FirstOrDefault(t => t.Name.EqualsCaseInsensitive(electedTitleName));
-        public static ElectedTitle ActiveElectedTitleByID(int electedTitleID) => ActiveElectedTitles.FirstOrDefault(wp => wp.Id == electedTitleID);
-        public static ElectedTitle ActiveElectedTitleByNameOrID(string electedTitleNameOrID) => int.TryParse(electedTitleNameOrID, out int ID) ? ActiveElectedTitleByID(ID) : ActiveElectedTitleByName(electedTitleNameOrID);
+        public static ElectedTitle ActiveElectedTitleById(int electedTitleId) => ActiveElectedTitles.FirstOrDefault(wp => wp.Id == electedTitleId);
+        public static ElectedTitle ActiveElectedTitleByNameOrId(string electedTitleNameOrId) => int.TryParse(electedTitleNameOrId, out int id) ? ActiveElectedTitleById(id) : ActiveElectedTitleByName(electedTitleNameOrId);
 
         public static IEnumerable<AppointedTitle> ActiveAppointedTitles => Registrars.Get<Title>().NonNull().Where(t => t is AppointedTitle && ((AppointedTitle)t).DirectOccupants.Count() > 0).Cast<AppointedTitle>();
         public static AppointedTitle ActiveAppointedTitleByName(string appointedTitleName) => ActiveAppointedTitles.FirstOrDefault(t => t.Name.EqualsCaseInsensitive(appointedTitleName));
-        public static AppointedTitle ActiveAppointedTitleByID(int appointedTitleID) => ActiveAppointedTitles.FirstOrDefault(wp => wp.Id == appointedTitleID);
-        public static AppointedTitle ActiveAppointedTitleByNameOrID(string appointedTitleNameOrID) => int.TryParse(appointedTitleNameOrID, out int ID) ? ActiveAppointedTitleByID(ID) : ActiveAppointedTitleByName(appointedTitleNameOrID);
+        public static AppointedTitle ActiveAppointedTitleById(int appointedTitleId) => ActiveAppointedTitles.FirstOrDefault(wp => wp.Id == appointedTitleId);
+        public static AppointedTitle ActiveAppointedTitleByNameOrId(string appointedTitleNameOrId) => int.TryParse(appointedTitleNameOrId, out int id) ? ActiveAppointedTitleById(id) : ActiveAppointedTitleByName(appointedTitleNameOrId);
 
         public static IEnumerable<Currency> Currencies => CurrencyManager.Currencies;
         public static Currency CurrencyByName(string currencyName) => Currencies.FirstOrDefault(c => c.Name.EqualsCaseInsensitive(currencyName));
-        public static Currency CurrencyByID(int currencyID) => Currencies.FirstOrDefault(c => c.Id == currencyID);
-        public static Currency CurrencyByNameOrID(string currencyNameOrID) => int.TryParse(currencyNameOrID, out int ID) ? CurrencyByID(ID) : CurrencyByName(currencyNameOrID);
+        public static Currency CurrencyById(int currencyId) => Currencies.FirstOrDefault(c => c.Id == currencyId);
+        public static Currency CurrencyByNameOrId(string currencyNameOrId) => int.TryParse(currencyNameOrId, out int id) ? CurrencyById(id) : CurrencyByName(currencyNameOrId);
 
         public static IEnumerable<Deed> Deeds => PropertyManager.Obj.Deeds;
         public static Deed DeedByName(string deedName) => Deeds.FirstOrDefault(deed => deed.Name.EqualsCaseInsensitive(deedName));
-        public static Deed DeedByID(int deedID) => Deeds.FirstOrDefault(deed => deed.Id == deedID);
-        public static Deed DeedByNameOrID(string deedNameOrID) => int.TryParse(deedNameOrID, out int ID) ? DeedByID(ID) : DeedByName(deedNameOrID);
+        public static Deed DeedById(int deedId) => Deeds.FirstOrDefault(deed => deed.Id == deedId);
+        public static Deed DeedByNameOrId(string deedNameOrId) => int.TryParse(deedNameOrId, out int id) ? DeedById(id) : DeedByName(deedNameOrId);
 
         public static IEnumerable<Skill> Specialties => SkillTree.AllSkillTrees.SelectMany(skilltree => skilltree.ProfessionChildren).Select(skilltree => skilltree.StaticSkill);
         public static Skill SpecialtyByName(string specialtyName) => Specialties.FirstOrDefault(specialty => specialty.Name.EqualsCaseInsensitive(specialtyName));

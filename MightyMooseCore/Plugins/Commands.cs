@@ -78,7 +78,7 @@ namespace Eco.Moose.Plugin
         {
             ExecuteCommand<object>((lUser, args) =>
             {
-                Version? modIOVersion = MightyMooseCore.Obj.ModIOVersion;
+                Version? modIOVersion = MightyMooseCore.Obj.ModIoVersion;
                 string modIOVersionDesc = modIOVersion != null ? $"Latest version: {modIOVersion.ToString(3)}" : "Latest version: Unknown";
 
                 Version installedVersion = MightyMooseCore.Obj.InstalledVersion;
