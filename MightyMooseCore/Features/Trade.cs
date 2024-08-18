@@ -158,8 +158,7 @@ namespace Eco.Moose.Features
             return AllStoresToOffers(store => store.StoreData.BuyOffers, includeFilter, start, count);
         }
 
-        public static IEnumerable<Tuple<StoreComponent, TradeOffer>>
-            AllStoresToOffers(Func<StoreComponent, IEnumerable<TradeOffer>> storeToOffers,
+        public static IEnumerable<Tuple<StoreComponent, TradeOffer>> AllStoresToOffers(Func<StoreComponent, IEnumerable<TradeOffer>> storeToOffers,
                    Func<StoreComponent, TradeOffer, bool> includeFilter,
                    int start = 0,
                    int count = int.MaxValue)
@@ -252,16 +251,25 @@ namespace Eco.Moose.Features
                 float price = offer.Price;
                 int quantity = offer.Stack.Quantity;
                 Currency currency = store.Currency;
-                float availableCurrency = offer.Buying ? store.BankAccount.GetCurrencyHoldingVal(currency) : user.GetWealthInCurrency(currency);
-                int maxTradeCount = price > 0f && !float.IsInfinity(availableCurrency) ? FloorToInt(availableCurrency / price) : Int32.MaxValue; // Calculate how many items can be traded using the available money
-                if (offer.Buying)
+                int maxTradeCount = Int32.MaxValue;
+                if (currency != null) // If currency is null, the store is set to barter
                 {
-                    if (offer.ShouldLimit && offer.MaxNumWanted < maxTradeCount) // If there is a buy limit that is lower than what can be afforded, lower to that limit
-                        maxTradeCount = offer.MaxNumWanted;
-                }
-                else if (quantity < maxTradeCount)
-                {
-                    maxTradeCount = quantity; // If there less items for sale than we can pay for, lower to the amount available for sale
+                    // Calculate how many items can be traded using the available money
+                    float availableCurrency = offer.Buying ? store.BankAccount.GetCurrencyHoldingVal(currency) : user.GetWealthInCurrency(currency);
+                    if(price > 0.0f && !float.IsInfinity(availableCurrency))
+                    {
+                        maxTradeCount = FloorToInt(availableCurrency / price);
+                    }
+
+                    if (offer.Buying)
+                    {
+                        if (offer.ShouldLimit && offer.MaxNumWanted < maxTradeCount) // If there is a buy limit that is lower than what can be afforded, lower to that limit
+                            maxTradeCount = offer.MaxNumWanted;
+                    }
+                    else if (quantity < maxTradeCount)
+                    {
+                        maxTradeCount = quantity; // If there less items for sale than we can pay for, lower to the amount available for sale
+                    }
                 }
 
                 var quantityString = (offer.Stack.Quantity == maxTradeCount || maxTradeCount == Int32.MaxValue)
