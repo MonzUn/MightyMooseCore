@@ -43,7 +43,7 @@ namespace Eco.Moose.Features
 
         public static List<LookupEntry> StoreLookup => AllStores.Select(store => new LookupEntry(store)).ToList();
 
-        public static IEnumerable<StoreComponent> AllStores => WorldObjectUtil.AllObjsWithComponent<StoreComponent>();
+        public static IEnumerable<StoreComponent> AllStores => WorldObjectUtil.AllObjsWithComponent<StoreComponent>().Where(store => store.Owners != null);
 
         public static string StoreCurrencyName(StoreComponent store)
         {
