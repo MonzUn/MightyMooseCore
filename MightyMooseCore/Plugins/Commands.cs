@@ -1,4 +1,5 @@
-﻿using Eco.Core.Utils;
+﻿using Eco.Core.Plugins.Interfaces;
+using Eco.Core.Utils;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.Messaging.Chat.Commands;
 using Eco.Moose.Data.Constants;
@@ -9,7 +10,7 @@ using Eco.Moose.Utils.Message;
 using Eco.Moose.Utils.Plugin;
 using Eco.Moose.Utils.TextUtils;
 using Eco.Shared.Utils;
-
+using System.Text;
 using static Eco.Moose.Data.Enums;
 using static Eco.Moose.Features.Trade;
 
@@ -337,7 +338,6 @@ namespace Eco.Moose.Plugin
 
                 FormatTrades(callingUser, offerType, groupedBuyOffers, groupedSellOffers, out string message);
                 DisplayCommandData(callingUser, Constants.GUI_PANEL_TRADES, matchedName, message);
-
             }, callingUser);
         }
 

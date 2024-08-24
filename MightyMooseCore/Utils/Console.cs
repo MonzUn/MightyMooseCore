@@ -3,7 +3,7 @@ using Eco.Core.Utils.Logging;
 using Eco.Shared.Localization;
 using Eco.Shared.Utils;
 
-namespace Eco.Moose.Utils
+namespace Eco.Moose.Utils.Console
 {
     public static class Console
     {

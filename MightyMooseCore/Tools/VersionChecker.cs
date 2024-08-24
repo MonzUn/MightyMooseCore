@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Eco.Moose.Tools.VersionChecker
 {
     using Eco.Moose.Tools.Logger;
-    using static Eco.Moose.Utils.Console;
+    using static Eco.Moose.Utils.Console.Console;
 
     public static class VersionChecker
     {

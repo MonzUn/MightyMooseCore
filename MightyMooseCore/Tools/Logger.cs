@@ -2,10 +2,9 @@
 using Eco.Moose.Plugin;
 using Eco.Shared.Localization;
 using Eco.Shared.Logging;
-using Eco.Shared.Utils;
 using System.Reflection;
 
-using static Eco.Moose.Utils.Console;
+using static Eco.Moose.Utils.Console.Console;
 
 namespace Eco.Moose.Tools.Logger
 {
