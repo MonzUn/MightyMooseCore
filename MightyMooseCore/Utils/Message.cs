@@ -131,7 +131,7 @@ namespace Eco.Moose.Utils.Message
             if (recipient == null || recipient.Player == null)
                 return false;
 
-            recipient.Msg(Localizer.DoStr(message), Shared.Services.NotificationStyle.Error);
+            recipient.Error(Localizer.DoStr(message));
             return true;
         }
 
