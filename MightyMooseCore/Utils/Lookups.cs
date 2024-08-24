@@ -1,4 +1,6 @@
-﻿using Eco.Core.Systems;
+﻿using Eco.Core;
+using Eco.Core.Plugins.Interfaces;
+using Eco.Core.Systems;
 using Eco.Gameplay.Civics.Demographics;
 using Eco.Gameplay.Civics.Elections;
 using Eco.Gameplay.Civics.Laws;
@@ -22,6 +24,8 @@ namespace Eco.Moose.Utils.Lookups
 {
     public static class Lookups
     {
+        // --- Gameplay ---
+
         public static double SecondsPassedTotal => WorldTime.Seconds;
         public static double SecondsPassedOnDay => WorldTime.Seconds % Constants.SECONDS_PER_DAY;
         public static double SecondsLeftOnDay => Constants.SECONDS_PER_DAY - SecondsPassedOnDay;
@@ -102,5 +106,10 @@ namespace Eco.Moose.Utils.Lookups
         public static Skill ProfessionByName(string professionName) => Professions.FirstOrDefault(profession => profession.Name.EqualsCaseInsensitive(professionName));
 
         public static IEnumerable<FoodItem> FoodItems => Item.AllItemsIncludingHidden.OfType<FoodItem>();
+
+        // --- Non-Gameplay ---
+
+        public static IEnumerable<IServerPlugin> Plugins => PluginManager.Controller.Plugins;
+        public static IEnumerable<IConfigurablePlugin> ConfigurablePlugins => Plugins.Where(plugin => plugin.GetType().GetInterfaces().Contains(typeof(IConfigurablePlugin))).Select(plugin => plugin as IConfigurablePlugin);
     }
 }

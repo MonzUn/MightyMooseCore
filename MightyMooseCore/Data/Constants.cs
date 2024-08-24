@@ -18,6 +18,7 @@
 
         public const int PLOT_SIZE_M2 = 5 * 5;
 
+        public const string GUI_PANEL_SIMPLE_LIST = "MooseSimpleList";
         public const string GUI_PANEL_TRADES = "MooseTrades";
     }
 }

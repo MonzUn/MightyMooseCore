@@ -4,6 +4,7 @@ using Eco.Gameplay.Systems.Messaging.Chat.Commands;
 using Eco.Moose.Data.Constants;
 using Eco.Moose.Features;
 using Eco.Moose.Tools.Logger;
+using Eco.Moose.Utils.Lookups;
 using Eco.Moose.Utils.Message;
 using Eco.Moose.Utils.TextUtils;
 using Eco.Shared.Utils;
@@ -256,6 +257,31 @@ namespace Eco.Moose.Plugin
                 else
                     ReportCommandError(callingUser, $"Failed to send message to {sendContext}.");
 
+            }, callingUser);
+        }
+        #endregion
+
+        #region Plugin Management
+
+        [ChatSubCommand("Moose", "Displays a list of all registered plugins.", ChatAuthorizationLevel.User)]
+        public static void ListPlugins(User callingUser)
+        {
+            ExecuteCommand<object>((lUser, args) =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendJoin("\n", Lookups.Plugins.OrderBy(plugin => plugin.ToString()));
+                DisplayCommandData(callingUser, Constants.GUI_PANEL_SIMPLE_LIST, "Plugins", sb.ToString());
+            }, callingUser);
+        }
+
+        [ChatSubCommand("Moose", "Displays a list of all registered plugins that has a config.", ChatAuthorizationLevel.User)]
+        public static void ListConfigurablePlugins(User callingUser)
+        {
+            ExecuteCommand<object>((lUser, args) =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendJoin("\n", Lookups.ConfigurablePlugins.OrderBy(plugin => plugin.ToString()));
+                DisplayCommandData(callingUser, Constants.GUI_PANEL_SIMPLE_LIST, "Configurable Plugins", sb.ToString());
             }, callingUser);
         }
         #endregion
