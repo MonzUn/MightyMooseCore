@@ -2,6 +2,7 @@
 {
     public static class Constants
     {
+        public static string CONFIG_PATH_ABS { get { return Directory.GetCurrentDirectory() + "/Configs/"; } }
         public static string STORAGE_PATH_ABS { get { return Directory.GetCurrentDirectory() + "/Storage/Mods/MightyMooseCore/"; } }
 
         public static readonly string DEFAULT_CHAT_CHANNEL_NAME = "general";

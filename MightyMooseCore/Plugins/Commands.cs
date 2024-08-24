@@ -6,6 +6,7 @@ using Eco.Moose.Features;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Utils.Lookups;
 using Eco.Moose.Utils.Message;
+using Eco.Moose.Utils.Plugin;
 using Eco.Moose.Utils.TextUtils;
 using Eco.Shared.Utils;
 
@@ -284,6 +285,34 @@ namespace Eco.Moose.Plugin
                 DisplayCommandData(callingUser, Constants.GUI_PANEL_SIMPLE_LIST, "Configurable Plugins", sb.ToString());
             }, callingUser);
         }
+
+        [ChatSubCommand("Moose", "Reloads the config of the supplied plugin or the MightyMooseCore config if no plugin name is supplied.", ChatAuthorizationLevel.Admin)]
+        public static void ReloadConfig(User callingUser, string pluginName = "")
+        {
+            ExecuteCommand<object>((lUser, args) =>
+            {
+                IConfigurablePlugin? plugin = pluginName.IsEmpty()
+                    ? MightyMooseCore.Obj
+                    : Lookups.ConfigurablePlugins.FirstOrDefault(plugin => plugin.ToString().EqualsCaseInsensitive(pluginName) || plugin.GetType().Name.EqualsCaseInsensitive(pluginName));
+
+                if (plugin == null)
+                {
+                    ReportCommandError(callingUser, $"Failed to find configurable plugin with name \"{pluginName}\"");
+                    return;
+                }
+
+                var resultAndMessage = PluginUtils.ReloadConfig(plugin).Result;
+                if (resultAndMessage.Item1)
+                {
+                    ReportCommandInfo(callingUser, resultAndMessage.Item2);
+                }
+                else
+                {
+                    ReportCommandError(callingUser, resultAndMessage.Item2);
+                }
+            }, callingUser);
+        }
+
         #endregion
 
         #region Features
