@@ -13,7 +13,7 @@ namespace Eco.Moose.Utils.Plugin
         {
             IPluginConfig config = plugin.PluginConfig;
 
-            if (IsAssignableToGenericType(config.GetConfig().GetType(), typeof(Singleton<>))/*config.GetType().IsAssignableFrom(typeof(Singleton<>))*/)
+            if (IsAssignableToGenericType(config.GetConfig().GetType(), typeof(Singleton<>)))
             {
                 return Tuple.Create(false, $"Cannot reload config as the \"{plugin}\" plugin uses a singleton config");
             }
