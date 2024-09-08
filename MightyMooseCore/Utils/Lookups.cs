@@ -1,6 +1,7 @@
 ﻿using Eco.Core;
 using Eco.Core.Plugins.Interfaces;
 using Eco.Core.Systems;
+using Eco.Core.Utils;
 using Eco.Gameplay.Civics.Demographics;
 using Eco.Gameplay.Civics.Elections;
 using Eco.Gameplay.Civics.Laws;
@@ -19,6 +20,8 @@ using Eco.Shared.Items;
 using Eco.Shared.Time;
 using Eco.Shared.Utils;
 using Eco.Simulation.Time;
+using Eco.Simulation.WorldLayers;
+using Eco.Simulation.WorldLayers.Layers;
 using User = Eco.Gameplay.Players.User;
 
 namespace Eco.Moose.Utils.Lookups
@@ -107,6 +110,11 @@ namespace Eco.Moose.Utils.Lookups
         public static Skill ProfessionByName(string professionName) => Professions.FirstOrDefault(profession => profession.Name.EqualsCaseInsensitive(professionName));
 
         public static IEnumerable<FoodItem> FoodItems => Item.AllItemsIncludingHidden.OfType<FoodItem>();
+
+        public static IEnumerable<WorldLayer> Layers => WorldLayerManager.Obj.Layers;
+        public static IEnumerable<WorldLayer> VisibleLayers => WorldLayerManager.Obj.Layers.Where(layer => layer.IsVisible);
+        public static WorldLayer LayerByName(string layerName) => Layers.FirstOrDefault(layer => layer.Name.StartWithCaseInsensitive(layerName));
+        public static WorldLayer VisibleLayerByName(string layerName) => VisibleLayers.FirstOrDefault(layer => layer.Name.StartWithCaseInsensitive(layerName));
 
         // --- Non-Gameplay ---
 
