@@ -318,7 +318,7 @@ namespace Eco.Moose.Plugin
 
         #region Features
 
-        [ChatSubCommand("Moose", "Displays available trades by player, tag, item or store.", "Trades", ChatAuthorizationLevel.User)]
+        [ChatSubCommand("Moose", "Displays available trades by player, tag, item or store.", ChatAuthorizationLevel.User)]
         public static void Trades(User callingUser, string searchName)
         {
             ExecuteCommand<object>((lUser, args) =>
