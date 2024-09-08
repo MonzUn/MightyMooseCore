@@ -14,6 +14,7 @@ using Eco.Gameplay.Property;
 using Eco.Gameplay.Settlements;
 using Eco.Gameplay.Skills;
 using Eco.Moose.Data.Constants;
+using Eco.Plugins.Networking;
 using Eco.Shared.Items;
 using Eco.Shared.Time;
 using Eco.Shared.Utils;
@@ -111,5 +112,6 @@ namespace Eco.Moose.Utils.Lookups
 
         public static IEnumerable<IServerPlugin> Plugins => PluginManager.Controller.Plugins;
         public static IEnumerable<IConfigurablePlugin> ConfigurablePlugins => Plugins.Where(plugin => plugin.GetType().GetInterfaces().Contains(typeof(IConfigurablePlugin))).Select(plugin => plugin as IConfigurablePlugin);
+        public static string WebServerUrl => !NetworkManager.Config.WebServerUrl.IsEmpty() ? NetworkManager.Config.WebServerUrl : !NetworkManager.Config.RemoteAddress.IsEmpty() ? $"{NetworkManager.Config.RemoteAddress}:{NetworkManager.Config.WebServerPort}" : string.Empty;
     }
 }
