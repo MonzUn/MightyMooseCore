@@ -31,6 +31,7 @@ namespace Eco.Moose.Utils.Plugin
             if (!filenameToLoad.IsEmpty())
             {
                 await plugin.PluginConfig.LoadAsync(filenameToLoad);
+                plugin.OnEditObjectChanged(null, "");
                 return Tuple.Create(true, $"Reloaded {filenameToLoad}");
             }
             else
