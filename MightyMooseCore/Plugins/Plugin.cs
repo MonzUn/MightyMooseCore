@@ -17,6 +17,17 @@ using Eco.WorldGenerator;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
+// TODO: Temporarily implemented outside of plugin due to vanilla bug
+public class MightyMooseCoreMod : IModInit
+{
+    public static ModRegistration Register() => new()
+    {
+        ModName = "MightyMooseCore",
+        ModDescription = "Acts as a dependency for other mods such as DiscordLink and Chronicler, but also comes with a set of useful commands.",
+        ModDisplayName = "Mighty Moose Core",
+    };
+}
+
 namespace Eco.Moose.Plugin
 {
     [Priority(PriorityAttribute.VeryHigh)] // Need to start before any dependent plugins
