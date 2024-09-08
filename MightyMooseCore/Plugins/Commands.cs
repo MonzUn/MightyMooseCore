@@ -1,5 +1,6 @@
 ﻿using Eco.Core.Plugins.Interfaces;
 using Eco.Core.Utils;
+using Eco.Gameplay.Items;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.Messaging.Chat.Commands;
 using Eco.Moose.Data.Constants;
@@ -341,7 +342,57 @@ namespace Eco.Moose.Plugin
             }, callingUser);
         }
 
-        #endregion
+        [ChatSubCommand("Moose", "Displays information about food preferences of the target user.", ChatAuthorizationLevel.User)]
+        public static void Taste(User callingUser, string userNameOrId = "")
+        {
+            ExecuteCommand<object>(async (lUser, args) =>
+            {
+                User targetUser = !string.IsNullOrEmpty(userNameOrId) ? Lookups.UserByNameOrId(userNameOrId) : callingUser;
+                if (targetUser == null)
+                {
+                    ReportCommandError(callingUser, $"No user with the name or ID \"{userNameOrId}\" could be found");
+                    return;
+                }
 
+                TasteBuds targetTaste = targetUser.Stomach.TasteBuds;
+                string[] tastePrefereneNames = Enum.GetNames(typeof(ItemTaste.TastePreference));
+                Color[] tastePrefereneColors = { Color.Red, Color.Red, Color.LightRed, Color.Grey, Color.LightGreen, Color.Green, Color.Green };
+                List<FoodItem>[] tasteToFood = new List<FoodItem>[tastePrefereneNames.Count()];
+                for (int i = 0; i < tasteToFood.Length; ++i)
+                {
+                    tasteToFood[i] = new List<FoodItem>();
+                }
+
+                string data = string.Empty;
+                foreach (var tasteEntry in targetTaste.FoodToTaste)
+                {
+                    FoodItem food = Lookups.FoodItems.FirstOrDefault(x => x.Type == tasteEntry.Key);
+                    if (food == null)
+                        continue;
+
+                    tasteToFood[(int)tasteEntry.Value.Preference].Add(food);
+                }
+
+                // Add favorite/worst
+                string favoriteDesc = targetTaste.FavoriteDiscovered ? tasteToFood[(int)ItemTaste.TastePreference.Favorite].First().MarkedUpName : "Unknown";
+                string worstDesc = targetTaste.WorstDiscovered ? tasteToFood[(int)ItemTaste.TastePreference.Worst].First().MarkedUpName : "Unknown";
+                data += $"{Text.Header(Text.Color(Color.Green, "Favorite"))}:   {favoriteDesc}\n{Text.Header(Text.Color(Color.Red, "Worst"))}:   {worstDesc}\n\n";
+
+                // Loop backwards over the remaining taste categories to get tastier food at the top and skip favorite and worst
+                for (int i = tasteToFood.Length - 2; i >= 1; --i)
+                {
+                    data += $"--- {Text.Header(Text.Color(tastePrefereneColors[i], tastePrefereneNames[i]))} ---\n";
+                    foreach (FoodItem food in tasteToFood[i])
+                    {
+                        data += $"{food.MarkedUpName}\n";
+                    }
+                    data += "\n";
+                }
+
+                DisplayCommandData(callingUser, Constants.GUI_PANEL_TASTE, $"{targetUser.MarkedUpName} food preferences", data);
+            }, callingUser);
+        }
+
+        #endregion
     }
 }
