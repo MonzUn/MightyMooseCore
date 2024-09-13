@@ -11,7 +11,7 @@
     <RootNamespace>Eco.Moose</RootNamespace>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputType>Library</OutputType>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <UserSecretsId>ba7e9424-fd88-4c0f-a00b-067a1a88c303</UserSecretsId>
   </PropertyGroup>
 
