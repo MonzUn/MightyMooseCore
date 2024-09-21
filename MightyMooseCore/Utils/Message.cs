@@ -42,7 +42,7 @@ namespace Eco.Moose.Utils.Message
                 }
                 else
                 {
-                    Logger.Warning($"Failed to find chat tab when creating channel \"{channelName}\" for user \"{user.Name}\"");
+                    Logger.Warning($"Failed to find chat tab when creating channel \"{channelName}\" for user \"{user.Name}\"", Assembly.GetCallingAssembly());
                 }
             }
 
@@ -55,7 +55,7 @@ namespace Eco.Moose.Utils.Message
             var to = ChatParsingUtils.ResolveReceiver(targetAndMessage, out var messageContent);
             if (to.Failed || to.Val == null)
             {
-                Logger.Error($"Failed to resolve receiver of message: \"{targetAndMessage}\"");
+                Logger.Error($"Failed to resolve receiver of message: \"{targetAndMessage}\"", Assembly.GetCallingAssembly());
                 return false;
             }
             IChatReceiver receiver = to.Val;
@@ -66,7 +66,7 @@ namespace Eco.Moose.Utils.Message
 
             if (string.IsNullOrEmpty(messageContent))
             {
-                Logger.Warning($"Attempted to send empty message: \"{targetAndMessage}\"");
+                Logger.Warning($"Attempted to send empty message: \"{targetAndMessage}\"", Assembly.GetCallingAssembly());
                 return false;
             }
 
