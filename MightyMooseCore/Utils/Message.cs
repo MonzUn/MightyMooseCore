@@ -29,7 +29,7 @@ namespace Eco.Moose.Utils.Message
             return ChannelManager.Obj.Registrar.GetByName(channelName) != null;
         }
 
-        public static Channel CreateChannel(string channelName)
+        public static Channel CreateChatChannel(string channelName)
         {
             Channel newChannel = new Channel();
             newChannel.Managers.Add(DemographicManager.Obj.Get(SpecialDemographics.Admins));
