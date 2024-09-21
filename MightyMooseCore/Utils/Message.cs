@@ -16,13 +16,6 @@ namespace Eco.Moose.Utils.Message
 
     public static class Message
     {
-        public static void EnsureChatChannelExists(string channelName)
-        {
-            if (!ChatChannelExists(channelName))
-            {
-                CreateChannel(channelName);
-            }
-        }
 
         public static bool ChatChannelExists(string channelName)
         {
