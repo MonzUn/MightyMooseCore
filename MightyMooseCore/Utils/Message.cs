@@ -13,10 +13,10 @@ namespace Eco.Moose.Utils.Message
 {
     using Eco.Gameplay.Systems.Messaging.Mail;
     using Eco.Moose.Data.Constants;
+    using System.Reflection;
 
     public static class Message
     {
-
         public static bool ChatChannelExists(string channelName)
         {
             return ChannelManager.Obj.Registrar.GetByName(channelName) != null;
@@ -46,6 +46,7 @@ namespace Eco.Moose.Utils.Message
                 }
             }
 
+            Logger.Info($"Created chat channel \"{newChannel.Name}\"", Assembly.GetCallingAssembly());
             return newChannel;
         }
 
