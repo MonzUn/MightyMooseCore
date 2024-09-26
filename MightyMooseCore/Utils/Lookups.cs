@@ -85,12 +85,12 @@ namespace Eco.Moose.Utils.Lookups
         public static IEnumerable<ElectedTitle> ActiveElectedTitles => ActiveSettlements.SelectMany(ActiveElectedTitlesForSettlement);
         public static IEnumerable<ElectedTitle> ActiveElectedTitlesForSettlement(Settlement settlement) => CivicsUtils.AllActive<ElectedTitle>(settlement);
         public static ElectedTitle ActiveElectedTitleByName(string electedTitleName) => ActiveElectedTitles.FirstOrDefault(t => t.Name.EqualsCaseInsensitive(electedTitleName));
-        public static ElectedTitle ActiveElectedTitleById(int electedTitleId) => ActiveElectedTitles.FirstOrDefault(wp => wp.Id == electedTitleId);
+        public static ElectedTitle ActiveElectedTitleById(int electedTitleId) => ActiveElectedTitles.FirstOrDefault(t => t.Id == electedTitleId);
         public static ElectedTitle ActiveElectedTitleByNameOrId(string electedTitleNameOrId) => int.TryParse(electedTitleNameOrId, out int id) ? ActiveElectedTitleById(id) : ActiveElectedTitleByName(electedTitleNameOrId);
 
         public static IEnumerable<AppointedTitle> ActiveAppointedTitles => Registrars.Get<Title>().NonNull().Where(t => t is AppointedTitle && ((AppointedTitle)t).DirectOccupants.Count() > 0).Cast<AppointedTitle>();
         public static AppointedTitle ActiveAppointedTitleByName(string appointedTitleName) => ActiveAppointedTitles.FirstOrDefault(t => t.Name.EqualsCaseInsensitive(appointedTitleName));
-        public static AppointedTitle ActiveAppointedTitleById(int appointedTitleId) => ActiveAppointedTitles.FirstOrDefault(wp => wp.Id == appointedTitleId);
+        public static AppointedTitle ActiveAppointedTitleById(int appointedTitleId) => ActiveAppointedTitles.FirstOrDefault(t => t.Id == appointedTitleId);
         public static AppointedTitle ActiveAppointedTitleByNameOrId(string appointedTitleNameOrId) => int.TryParse(appointedTitleNameOrId, out int id) ? ActiveAppointedTitleById(id) : ActiveAppointedTitleByName(appointedTitleNameOrId);
 
         public static IEnumerable<Currency> Currencies => CurrencyManager.Currencies;
