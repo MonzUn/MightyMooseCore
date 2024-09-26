@@ -1,5 +1,6 @@
 ﻿using Eco.Core.Plugins.Interfaces;
 using Eco.Core.Utils;
+using Eco.Gameplay.GameActions;
 using Eco.Gameplay.Items;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.Messaging.Chat.Commands;
@@ -11,6 +12,7 @@ using Eco.Moose.Utils.Message;
 using Eco.Moose.Utils.Plugin;
 using Eco.Moose.Utils.TextUtils;
 using Eco.Shared.Utils;
+using System.Reflection;
 using System.Text;
 using static Eco.Moose.Data.Enums;
 using static Eco.Moose.Features.Trade;
@@ -394,5 +396,25 @@ namespace Eco.Moose.Plugin
         }
 
         #endregion
+
+#if DEBUG
+        #region Dev Tools
+
+        [ChatSubCommand("Moose", "List all existing types of GameActions", ChatAuthorizationLevel.Admin)]
+        public static void ListGameActions(User user)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (var type in Assembly.GetAssembly(typeof(GameAction)).GetTypes().OrderBy(t => t.Name))
+            {
+                if (type.IsSubclassOf(typeof(GameAction)))
+                {
+                    builder.AppendLine(type.GetSimpleName());
+                }
+            }
+            user.Player.OpenInfoPanel("Game Actions", builder.ToString(), "GameActions");
+        }
+
+        #endregion
+#endif
     }
 }
