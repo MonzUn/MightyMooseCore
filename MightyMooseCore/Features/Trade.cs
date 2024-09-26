@@ -240,9 +240,9 @@ namespace Eco.Moose.Features
 
             IAuthManager AuthManager = ServiceHolder<IAuthManager>.Obj;
 
-            StringBuilder NormalOffers = new StringBuilder();
-            StringBuilder NoQuantityOffers = new StringBuilder();
-            StringBuilder DisabledOffers = new StringBuilder();
+            StringBuilder normalOffers = new StringBuilder();
+            StringBuilder noQuantityOffers = new StringBuilder();
+            StringBuilder disabledOffers = new StringBuilder();
             foreach (var storeAndoffer in offers)
             {
                 StoreComponent store = storeAndoffer.Item1;
@@ -281,20 +281,20 @@ namespace Eco.Moose.Features
                 if (!store.OnOff.Enabled || !AuthManager.IsAuthorized(store.Parent, user, AccessType.ConsumerAccess, null))
                 {
                     line = Text.Color(Color.Red, line);
-                    DisabledOffers.AppendLine(line);
+                    disabledOffers.AppendLine(line);
                 }
                 else if (offer.Stack.Quantity == 0)
                 {
                     line = Text.Color(Color.Yellow, line);
-                    NoQuantityOffers.AppendLine(line);
+                    noQuantityOffers.AppendLine(line);
                 }
                 else
                 {
-                    NormalOffers.AppendLine(line);
+                    normalOffers.AppendLine(line);
                 }
             }
 
-            return $"{NormalOffers}{NoQuantityOffers}{DisabledOffers}";
+            return $"{normalOffers}{noQuantityOffers}{disabledOffers}";
         }
     }
 }
