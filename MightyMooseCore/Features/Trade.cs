@@ -100,7 +100,7 @@ namespace Eco.Moose.Features
                 User matchUser = (User)match;
                 matchedName = matchUser.Name;
 
-                bool filter(StoreComponent store, TradeOffer offer) => store.Parent.Owners == matchUser;
+                bool filter(StoreComponent store, TradeOffer offer) => store.Parent.Owners.ContainsUser(matchUser);
                 groupedSellOffers = SellOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
                 groupedBuyOffers = BuyOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
 
