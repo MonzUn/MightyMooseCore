@@ -2,7 +2,7 @@
 {
     public static class Enums
     {
-        public enum MessageType
+        public enum MessageTypes
         {
             Chat,                   // Regular chat message that is sent to the default chat channel
             Info,                   // Short on-screen message that times out quickly (White)

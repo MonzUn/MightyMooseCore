@@ -123,13 +123,13 @@ namespace Eco.Moose.Plugin
                     return;
                 }
 
-                if (!Enum.TryParse(messageType, ignoreCase: true, out MessageType messageTypeEnum))
+                if (!Enum.TryParse(messageType, ignoreCase: true, out MessageTypes messageTypeEnum))
                 {
-                    ReportCommandError(callingUser, $"\"{messageType}\" is not a valid message type. The available message types are: {string.Join(", ", Enum.GetNames(typeof(MessageType)))}");
+                    ReportCommandError(callingUser, $"\"{messageType}\" is not a valid message type. The available message types are: {string.Join(", ", Enum.GetNames(typeof(MessageTypes)))}");
                     return;
                 }
 
-                if (recipient != null && messageTypeEnum != MessageType.NotificationOffline && !recipient.IsOnline)
+                if (recipient != null && messageTypeEnum != MessageTypes.NotificationOffline && !recipient.IsOnline)
                 {
                     ReportCommandError(callingUser, $"Failed to send message - {recipient.Name} is offline.");
                     return;
@@ -137,19 +137,19 @@ namespace Eco.Moose.Plugin
 
                 string formattedMessage = messageTypeEnum switch
                 {
-                    MessageType.Chat => $"{callingUser.Name}: {message}",
-                    MessageType.Info => $"{callingUser.Name}: {message}",
-                    MessageType.Warning => $"{callingUser.Name}: {message}",
-                    MessageType.Error => $"{callingUser.Name}: {message}",
-                    MessageType.Notification => $"[{callingUser.Name}]\n\n{message}",
-                    MessageType.NotificationOffline => $"[{callingUser.Name}]\n\n{message}",
-                    MessageType.Popup => $"[{callingUser.Name}]\n{message}",
+                    MessageTypes.Chat => $"{callingUser.Name}: {message}",
+                    MessageTypes.Info => $"{callingUser.Name}: {message}",
+                    MessageTypes.Warning => $"{callingUser.Name}: {message}",
+                    MessageTypes.Error => $"{callingUser.Name}: {message}",
+                    MessageTypes.Notification => $"[{callingUser.Name}]\n\n{message}",
+                    MessageTypes.NotificationOffline => $"[{callingUser.Name}]\n\n{message}",
+                    MessageTypes.Popup => $"[{callingUser.Name}]\n{message}",
                 };
 
                 bool result = true;
                 switch (messageTypeEnum)
                 {
-                    case MessageType.Chat:
+                    case MessageTypes.Chat:
                         {
                             if (recipient != null)
                             {
@@ -162,7 +162,7 @@ namespace Eco.Moose.Plugin
                             break;
                         }
 
-                    case MessageType.Info:
+                    case MessageTypes.Info:
                         {
                             if (recipient != null)
                             {
@@ -178,7 +178,7 @@ namespace Eco.Moose.Plugin
                             break;
                         }
 
-                    case MessageType.Warning:
+                    case MessageTypes.Warning:
                         {
                             if (recipient != null)
                             {
@@ -193,7 +193,7 @@ namespace Eco.Moose.Plugin
                             }
                             break;
                         }
-                    case MessageType.Error:
+                    case MessageTypes.Error:
                         {
                             if (recipient != null)
                             {
@@ -208,7 +208,7 @@ namespace Eco.Moose.Plugin
                             }
                             break;
                         }
-                    case MessageType.Popup:
+                    case MessageTypes.Popup:
                         {
                             if (recipient != null)
                             {
@@ -223,7 +223,7 @@ namespace Eco.Moose.Plugin
                             }
                             break;
                         }
-                    case MessageType.Notification:
+                    case MessageTypes.Notification:
                         {
                             if (recipient != null)
                             {
@@ -239,7 +239,7 @@ namespace Eco.Moose.Plugin
                             break;
                         }
 
-                    case MessageType.NotificationOffline:
+                    case MessageTypes.NotificationOffline:
                         {
                             if (recipient != null)
                             {
