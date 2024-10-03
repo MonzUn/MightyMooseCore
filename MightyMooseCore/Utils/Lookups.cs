@@ -16,7 +16,7 @@ using Eco.Gameplay.Players;
 using Eco.Gameplay.Property;
 using Eco.Gameplay.Settlements;
 using Eco.Gameplay.Skills;
-using Eco.Moose.Data.Constants;
+using Eco.Moose.Data;
 using Eco.Plugins.Networking;
 using Eco.Shared.Items;
 using Eco.Shared.Time;

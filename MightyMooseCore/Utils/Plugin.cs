@@ -1,7 +1,7 @@
 ﻿using Eco.Core.Plugins;
 using Eco.Core.Plugins.Interfaces;
 using Eco.Core.Utils;
-using Eco.Moose.Data.Constants;
+using Eco.Moose.Data;
 using Eco.Shared.Utils;
 using static Eco.Moose.Utils.TypeUtils.TypeUtils;
 

@@ -3,18 +3,17 @@ using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems;
 using Eco.Gameplay.Systems.Messaging.Chat;
 using Eco.Gameplay.Systems.Messaging.Chat.Channels;
+using Eco.Gameplay.Systems.Messaging.Mail;
 using Eco.Gameplay.Utils;
 using Eco.Moose.Tools.Logger;
 using Eco.Shared.Localization;
 using Eco.Shared.Networking;
 using Eco.Shared.Utils;
+using System.Reflection;
+using Constants = Eco.Moose.Data.Constants;
 
 namespace Eco.Moose.Utils.Message
 {
-    using Eco.Gameplay.Systems.Messaging.Mail;
-    using Eco.Moose.Data.Constants;
-    using System.Reflection;
-
     public static class Message
     {
         public static bool ChatChannelExists(string channelName)

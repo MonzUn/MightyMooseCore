@@ -4,7 +4,7 @@ using Eco.Gameplay.GameActions;
 using Eco.Gameplay.Items;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.Messaging.Chat.Commands;
-using Eco.Moose.Data.Constants;
+using Eco.Moose.Data;
 using Eco.Moose.Features;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Utils.Lookups;

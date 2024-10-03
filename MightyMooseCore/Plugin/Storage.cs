@@ -1,5 +1,5 @@
 ﻿using Eco.Gameplay.GameActions;
-using Eco.Moose.Data.Constants;
+using Eco.Moose.Data;
 using Eco.Moose.Events;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Utils.Persistance;
