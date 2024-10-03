@@ -7,9 +7,11 @@ using Eco.Gameplay.Civics.Elections;
 using Eco.Gameplay.Civics.Laws;
 using Eco.Gameplay.Civics.Misc;
 using Eco.Gameplay.Civics.Titles;
+using Eco.Gameplay.Components.Store;
 using Eco.Gameplay.Economy;
 using Eco.Gameplay.Economy.WorkParties;
 using Eco.Gameplay.Items;
+using Eco.Gameplay.Objects;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Property;
 using Eco.Gameplay.Settlements;
@@ -109,7 +111,12 @@ namespace Eco.Moose.Utils.Lookups
         public static IEnumerable<Skill> Professions => SkillTree.ProfessionSkillTrees.Select(skilltree => skilltree.StaticSkill);
         public static Skill ProfessionByName(string professionName) => Professions.FirstOrDefault(profession => profession.Name.EqualsCaseInsensitive(professionName));
 
-        public static IEnumerable<FoodItem> FoodItems => Item.AllItemsIncludingHidden.OfType<FoodItem>();
+        public static IEnumerable<Item> Items => Item.AllItemsExceptHidden;
+        public static IEnumerable<FoodItem> FoodItems => Items.OfType<FoodItem>();
+
+        public static IEnumerable<Tag> Tags => TagManager.AllTags;
+
+        public static IEnumerable<StoreComponent> Stores => WorldObjectUtil.AllObjsWithComponent<StoreComponent>().Where(store => store.Owners != null);
 
         public static IEnumerable<WorldLayer> Layers => WorldLayerManager.Obj.Layers;
         public static IEnumerable<WorldLayer> VisibleLayers => WorldLayerManager.Obj.Layers.Where(layer => layer.IsVisible);

@@ -3,10 +3,10 @@ using Eco.Gameplay.Components;
 using Eco.Gameplay.Components.Store;
 using Eco.Gameplay.Economy;
 using Eco.Gameplay.Items;
-using Eco.Gameplay.Objects;
 using Eco.Gameplay.Players;
 using Eco.Moose.Extensions;
 using Eco.Moose.Plugin;
+using Eco.Moose.Utils.Lookups;
 using Eco.Shared.IoC;
 using Eco.Shared.Items;
 using Eco.Shared.Utils;
@@ -28,20 +28,6 @@ namespace Eco.Moose.Features
             Invalid,
         }
 
-        private static IEnumerable<Item> _itemLookup = null;
-
-        public static IEnumerable<Item> ItemLookup => _itemLookup ??= Item.AllItemsExceptHidden;
-
-        private static IEnumerable<Tag> _tagLookup = null;
-
-        public static IEnumerable<Tag> TagLookup => _tagLookup ??= FindTags();
-
-        public static IEnumerable<User> UserLookup => UserManager.Users;
-
-        public static IEnumerable<StoreComponent> StoreLookup => AllStores;
-
-        public static IEnumerable<StoreComponent> AllStores => WorldObjectUtil.AllObjsWithComponent<StoreComponent>().Where(store => store.Owners != null);
-
         public static string StoreCurrencyName(StoreComponent store)
         {
             return store.CurrencyName.StripTags();
@@ -51,7 +37,7 @@ namespace Eco.Moose.Features
         {
             List<string> entries = new List<string>();
 
-            IEnumerable<object> lookup = (ItemLookup as IEnumerable<object>).Concat(TagLookup).Concat(UserLookup).Concat(StoreLookup);
+            IEnumerable<object> lookup = (Lookups.Items as IEnumerable<object>).Concat(Lookups.Tags).Concat(Lookups.Users).Concat(Lookups.Stores);
             object? match = BestMatchOrDefault(searchName, lookup, entry =>
             {
                 if (entry == null)
@@ -163,7 +149,7 @@ namespace Eco.Moose.Features
                    int start = 0,
                    int count = int.MaxValue)
         {
-            return AllStores
+            return Lookups.Stores
                 .SelectMany(store =>
                     storeToOffers(store)
                         .Where(offer => offer.IsSet && includeFilter(store, offer))
