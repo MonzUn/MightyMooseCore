@@ -12,7 +12,6 @@ using Eco.Shared.Items;
 using Eco.Shared.Utils;
 using System.Text;
 using static Eco.Shared.Mathf;
-using LookupEntry = Eco.Moose.Data.Either<Eco.Gameplay.Items.Item, Eco.Gameplay.Players.User, Eco.Gameplay.Items.Tag, Eco.Gameplay.Components.Store.StoreComponent>;
 using StoreOfferGroup = System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>;
 using StoreOfferList = System.Collections.Generic.IEnumerable<System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>>;
 
@@ -29,19 +28,17 @@ namespace Eco.Moose.Features
             Invalid,
         }
 
-        private static List<LookupEntry> _itemLookup = null;
+        private static IEnumerable<Item> _itemLookup = null;
 
-        public static List<LookupEntry> ItemLookup =>
-            _itemLookup ??= Item.AllItemsExceptHidden.Select(item => new LookupEntry(item)).ToList();
+        public static IEnumerable<Item> ItemLookup => _itemLookup ??= Item.AllItemsExceptHidden;
 
-        private static List<LookupEntry> _tagLookup = null;
+        private static IEnumerable<Tag> _tagLookup = null;
 
-        public static List<LookupEntry> TagLookup =>
-            _tagLookup ??= FindTags().Select(tag => new LookupEntry(tag)).ToList();
+        public static IEnumerable<Tag> TagLookup => _tagLookup ??= FindTags();
 
-        public static List<LookupEntry> UserLookup => UserManager.Users.Select(user => new LookupEntry(user)).ToList();
+        public static IEnumerable<User> UserLookup => UserManager.Users;
 
-        public static List<LookupEntry> StoreLookup => AllStores.Select(store => new LookupEntry(store)).ToList();
+        public static IEnumerable<StoreComponent> StoreLookup => AllStores;
 
         public static IEnumerable<StoreComponent> AllStores => WorldObjectUtil.AllObjsWithComponent<StoreComponent>().Where(store => store.Owners != null);
 
@@ -54,17 +51,20 @@ namespace Eco.Moose.Features
         {
             List<string> entries = new List<string>();
 
-            IEnumerable<LookupEntry> lookup = ItemLookup.Concat(TagLookup).Concat(UserLookup).Concat(StoreLookup);
-            LookupEntry match = BestMatchOrDefault(searchName, lookup, entry =>
+            IEnumerable<object> lookup = (ItemLookup as IEnumerable<object>).Concat(TagLookup).Concat(UserLookup).Concat(StoreLookup);
+            object? match = BestMatchOrDefault(searchName, lookup, entry =>
             {
-                if (entry.Is<Tag>())
-                    return entry.Get<Tag>().DisplayName;
-                else if (entry.Is<Item>())
-                    return entry.Get<Item>().DisplayName;
-                else if (entry.Is<User>())
-                    return entry.Get<User>().Name;
-                else if (entry.Is<StoreComponent>())
-                    return entry.Get<StoreComponent>().Parent.Name;
+                if (entry == null)
+                    return string.Empty;
+
+                if (entry is Tag)
+                    return ((Tag)entry).DisplayName;
+                else if (entry is Item)
+                    return ((Item)entry).DisplayName;
+                else if (entry is User)
+                    return ((User)entry).Name;
+                else if (entry is StoreComponent)
+                    return ((StoreComponent)entry).Parent.Name;
                 else
                     return string.Empty;
             });
@@ -73,9 +73,9 @@ namespace Eco.Moose.Features
             targetType = TradeTargetType.Invalid;
             groupedBuyOffers = null;
             groupedSellOffers = null;
-            if (match.Is<Tag>())
+            if (match is Tag)
             {
-                Tag matchTag = match.Get<Tag>();
+                Tag matchTag = (Tag)match;
                 matchedName = matchTag.Name;
 
                 bool filter(StoreComponent store, TradeOffer offer) => offer.Stack.Item.Tags().Contains(matchTag);
@@ -84,9 +84,9 @@ namespace Eco.Moose.Features
 
                 targetType = TradeTargetType.Tag;
             }
-            else if (match.Is<Item>())
+            else if (match is Item)
             {
-                Item matchItem = match.Get<Item>();
+                Item matchItem = (Item)match;
                 matchedName = matchItem.DisplayName;
 
                 bool filter(StoreComponent store, TradeOffer offer) => offer.Stack.Item.TypeID == matchItem.TypeID;
@@ -95,9 +95,9 @@ namespace Eco.Moose.Features
 
                 targetType = TradeTargetType.Item;
             }
-            else if (match.Is<User>())
+            else if (match is User)
             {
-                User matchUser = match.Get<User>();
+                User matchUser = (User)match;
                 matchedName = matchUser.Name;
 
                 bool filter(StoreComponent store, TradeOffer offer) => store.Parent.Owners == matchUser;
@@ -106,9 +106,9 @@ namespace Eco.Moose.Features
 
                 targetType = TradeTargetType.User;
             }
-            else if (match.Is<StoreComponent>())
+            else if (match is StoreComponent)
             {
-                StoreComponent matchStore = match.Get<StoreComponent>();
+                StoreComponent matchStore = (StoreComponent)match;
                 matchedName = matchStore.Parent.Name;
 
                 bool filter(StoreComponent store, TradeOffer offer) => store == matchStore;
