@@ -1,6 +1,5 @@
 ﻿using Eco.Core.Plugins.Interfaces;
 using Eco.Core.Utils;
-using Eco.Gameplay.GameActions;
 using Eco.Gameplay.Items;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.Messaging.Chat.Commands;
@@ -12,7 +11,6 @@ using Eco.Moose.Utils.Message;
 using Eco.Moose.Utils.Plugin;
 using Eco.Moose.Utils.TextUtils;
 using Eco.Shared.Utils;
-using System.Reflection;
 using System.Text;
 using static Eco.Moose.Data.Enums;
 using static Eco.Moose.Features.Trade;
@@ -332,15 +330,21 @@ namespace Eco.Moose.Plugin
                     return;
                 }
 
-                string matchedName = Trade.FindOffers(searchName, out TradeTargetType offerType, out StoreOfferList groupedBuyOffers, out StoreOfferList groupedSellOffers);
-                if (offerType == TradeTargetType.Invalid)
+                LookupResult lookupRes = DynamicLookup.Lookup(searchName, FULL_TRADE_LOOKUP_MASK);
+                if (lookupRes.Result != LookupResultTypes.SingleMatch)
                 {
-                    ReportCommandError(callingUser, $"No player, tag, item or store with the name \"{searchName}\" could be found.");
+                    if (lookupRes.Result == LookupResultTypes.MultiMatch)
+                        ReportCommandInfo(callingUser, lookupRes.ErrorMessage);
+                    else
+                        ReportCommandError(callingUser, lookupRes.ErrorMessage);
                     return;
                 }
+                object matchedEntity = lookupRes.Matches.First();
+                LookupTypes matchedEntityType = lookupRes.MatchedTypes;
 
-                FormatTrades(callingUser, offerType, groupedBuyOffers, groupedSellOffers, out string message);
-                DisplayCommandData(callingUser, Constants.GUI_PANEL_TRADES, matchedName, message);
+                Trade.FindOffers(matchedEntity, matchedEntityType, out StoreOfferList groupedBuyOffers, out StoreOfferList groupedSellOffers);
+                Trade.FormatTrades(callingUser, matchedEntityType, groupedBuyOffers, groupedSellOffers, out string message);
+                DisplayCommandData(callingUser, Constants.GUI_PANEL_TRADES, DynamicLookup.GetEntityName(matchedEntity), message);
             }, callingUser);
         }
 

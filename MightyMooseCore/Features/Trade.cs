@@ -11,7 +11,9 @@ using Eco.Shared.IoC;
 using Eco.Shared.Items;
 using Eco.Shared.Utils;
 using System.Text;
+using static Eco.Moose.Data.Enums;
 using static Eco.Shared.Mathf;
+
 using StoreOfferGroup = System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>;
 using StoreOfferList = System.Collections.Generic.IEnumerable<System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>>;
 
@@ -19,113 +21,42 @@ namespace Eco.Moose.Features
 {
     public class Trade
     {
-        public enum TradeTargetType
-        {
-            Tag,
-            Item,
-            User,
-            Store,
-            Invalid,
-        }
+        public const LookupTypes FULL_TRADE_LOOKUP_MASK = LookupTypes.Item | LookupTypes.Tag | LookupTypes.User | LookupTypes.Store;
 
         public static string StoreCurrencyName(StoreComponent store)
         {
             return store.CurrencyName.StripTags();
         }
 
-        public static string FindOffers(string searchName, out TradeTargetType targetType, out StoreOfferList groupedBuyOffers, out StoreOfferList groupedSellOffers)
+        public static void FindOffers(object entity, LookupTypes entityType, out StoreOfferList groupedBuyOffers, out StoreOfferList groupedSellOffers)
         {
-            List<string> entries = new List<string>();
-
-            IEnumerable<object> lookup = (Lookups.Items as IEnumerable<object>).Concat(Lookups.Tags).Concat(Lookups.Users).Concat(Lookups.Stores);
-            object? match = BestMatchOrDefault(searchName, lookup, entry =>
-            {
-                if (entry == null)
-                    return string.Empty;
-
-                if (entry is Tag)
-                    return ((Tag)entry).DisplayName;
-                else if (entry is Item)
-                    return ((Item)entry).DisplayName;
-                else if (entry is User)
-                    return ((User)entry).Name;
-                else if (entry is StoreComponent)
-                    return ((StoreComponent)entry).Parent.Name;
-                else
-                    return string.Empty;
-            });
-
-            string matchedName = string.Empty;
-            targetType = TradeTargetType.Invalid;
             groupedBuyOffers = null;
             groupedSellOffers = null;
-            if (match is Tag)
-            {
-                Tag matchTag = (Tag)match;
-                matchedName = matchTag.Name;
 
-                bool filter(StoreComponent store, TradeOffer offer) => offer.Stack.Item.Tags().Contains(matchTag);
+            if (entityType == LookupTypes.Item)
+            {
+                bool filter(StoreComponent store, TradeOffer offer) => offer.Stack.Item.TypeID == ((Item)entity).TypeID;
                 groupedSellOffers = SellOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
                 groupedBuyOffers = BuyOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
-
-                targetType = TradeTargetType.Tag;
             }
-            else if (match is Item)
+            else if (entityType == LookupTypes.Tag)
             {
-                Item matchItem = (Item)match;
-                matchedName = matchItem.DisplayName;
-
-                bool filter(StoreComponent store, TradeOffer offer) => offer.Stack.Item.TypeID == matchItem.TypeID;
+                bool filter(StoreComponent store, TradeOffer offer) => offer.Stack.Item.Tags().Contains((Tag)entity);
                 groupedSellOffers = SellOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
                 groupedBuyOffers = BuyOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
-
-                targetType = TradeTargetType.Item;
             }
-            else if (match is User)
+            else if (entityType == LookupTypes.User)
             {
-                User matchUser = (User)match;
-                matchedName = matchUser.Name;
-
-                bool filter(StoreComponent store, TradeOffer offer) => store.Parent.Owners.ContainsUser(matchUser);
+                bool filter(StoreComponent store, TradeOffer offer) => store.Parent.Owners.ContainsUser((User)entity);
                 groupedSellOffers = SellOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
                 groupedBuyOffers = BuyOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
-
-                targetType = TradeTargetType.User;
             }
-            else if (match is StoreComponent)
+            else if (entityType == LookupTypes.Store)
             {
-                StoreComponent matchStore = (StoreComponent)match;
-                matchedName = matchStore.Parent.Name;
-
-                bool filter(StoreComponent store, TradeOffer offer) => store == matchStore;
+                bool filter(StoreComponent store, TradeOffer offer) => store == (StoreComponent)entity;
                 groupedSellOffers = SellOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
                 groupedBuyOffers = BuyOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
-
-                targetType = TradeTargetType.Store;
             }
-
-            return matchedName;
-        }
-
-        public static T? BestMatchOrDefault<T>(string query, IEnumerable<T> lookup, Func<T, string> getKey)
-        {
-            var orderedAndKeyed = lookup.Select(t => Tuple.Create(getKey(t), t)).OrderBy(t => t.Item1);
-            var matches = new List<Predicate<string>> {
-                k => k == query,
-                k => k.StartWithCaseInsensitive(query),
-                k => k.ContainsCaseInsensitive(query)
-            };
-
-            foreach (var matcher in matches)
-            {
-                var match = orderedAndKeyed.FirstOrDefault(t => matcher(t.Item1));
-                if (match != default(Tuple<string, T>))
-                {
-                    return match.Item2;
-                }
-            }
-
-            return default;
         }
 
         public static IEnumerable<Tuple<StoreComponent, TradeOffer>>
@@ -159,50 +90,36 @@ namespace Eco.Moose.Features
                 .Take(count);
         }
 
-        private static IEnumerable<Tag> FindTags()
-        {
-            List<Tag> uniqueTags = new List<Tag>();
-            foreach (Item item in Item.AllItemsExceptHidden)
-            {
-                foreach (Tag tag in item.Tags())
-                {
-                    if (!uniqueTags.Contains(tag))
-                        uniqueTags.Add(tag);
-                }
-            }
-            return uniqueTags;
-        }
-
-        public static void FormatTrades(User user, TradeTargetType tradeType, StoreOfferList groupedBuyOffers, StoreOfferList groupedSellOffers, out string message)
+        public static void FormatTrades(User user, LookupTypes lookupType, StoreOfferList groupedBuyOffers, StoreOfferList groupedSellOffers, out string message)
         {
             // Format message
             StringBuilder builder = new StringBuilder();
             if (groupedSellOffers.Count() > 0 || groupedBuyOffers.Count() > 0)
             {
-                switch (tradeType)
+                switch (lookupType)
                 {
-                    case TradeTargetType.Tag:
-                    case TradeTargetType.Item:
+                    case LookupTypes.Item:
+                    case LookupTypes.Tag:
                         groupedBuyOffers = groupedBuyOffers.OrderByDescending(o => o.First().Item1.Currency != null ? MooseStorage.WorldData.CurrencyToTradeCountMap.GetValueOrDefault(o.First().Item1.Currency.Id, 0) : int.MinValue); // Currency == null => Barter store
                         groupedSellOffers = groupedSellOffers.OrderByDescending(o => o.First().Item1.Currency != null ? MooseStorage.WorldData.CurrencyToTradeCountMap.GetValueOrDefault(o.First().Item1.Currency.Id, 0) : int.MinValue);
                         break;
 
-                    case TradeTargetType.User:
-                    case TradeTargetType.Store:
+                    case LookupTypes.User:
+                    case LookupTypes.Store:
                         break;
                 }
 
                 foreach (StoreOfferGroup group in groupedBuyOffers)
                 {
                     builder.AppendLine(Text.Bold(Text.Color(Color.Green, $"<--- Buying for {group.First().Item1.CurrencyName.StripTags()} --->")));
-                    builder.Append(TradeOffersToDescriptions(group, user, tradeType));
+                    builder.Append(TradeOffersToDescriptions(group, user, lookupType));
                     builder.AppendLine();
                 }
 
                 foreach (StoreOfferGroup group in groupedSellOffers)
                 {
                     builder.AppendLine(Text.Bold(Text.Color(Color.Red, $"<--- Selling for {group.First().Item1.CurrencyName.StripTags()} --->")));
-                    builder.Append(TradeOffersToDescriptions(group, user, tradeType));
+                    builder.Append(TradeOffersToDescriptions(group, user, lookupType));
                     builder.AppendLine();
                 }
             }
@@ -213,14 +130,14 @@ namespace Eco.Moose.Features
             message = builder.ToString();
         }
 
-        private static string TradeOffersToDescriptions(StoreOfferGroup offers, User user, TradeTargetType tradeType)
+        private static string TradeOffersToDescriptions(StoreOfferGroup offers, User user, LookupTypes lookupType)
         {
-            Func<Tuple<StoreComponent, TradeOffer>, string> getLabel = tradeType switch
+            Func<Tuple<StoreComponent, TradeOffer>, string> getLabel = lookupType switch
             {
-                TradeTargetType.Tag => t => $"{t.Item2.Stack.Item.MarkedUpName} @ {t.Item1.Parent.MarkedUpName}",
-                TradeTargetType.Item => t => $"@ {t.Item1.Parent.MarkedUpName}",
-                TradeTargetType.User => t => t.Item2.Stack.Item.MarkedUpName,
-                TradeTargetType.Store => t => t.Item2.Stack.Item.MarkedUpName,
+                LookupTypes.Item => t => $"@ {t.Item1.Parent.MarkedUpName}",
+                LookupTypes.Tag => t => $"{t.Item2.Stack.Item.MarkedUpName} @ {t.Item1.Parent.MarkedUpName}",
+                LookupTypes.User => t => t.Item2.Stack.Item.MarkedUpName,
+                LookupTypes.Store => t => t.Item2.Stack.Item.MarkedUpName,
                 _ => t => string.Empty,
             };
 
@@ -242,7 +159,7 @@ namespace Eco.Moose.Features
                 {
                     // Calculate how many items can be traded using the available money
                     float availableCurrency = offer.Buying ? store.BankAccount.GetCurrencyHoldingVal(currency) : user.GetWealthInCurrency(currency);
-                    if(price > 0.0f && !float.IsInfinity(availableCurrency))
+                    if (price > 0.0f && !float.IsInfinity(availableCurrency))
                     {
                         maxTradeCount = FloorToInt(availableCurrency / price);
                     }

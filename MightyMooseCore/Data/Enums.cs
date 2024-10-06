@@ -12,5 +12,24 @@
             Notification,           // Persistent notification that ends up in the user's inbox while also being automatically opened
             NotificationOffline,    // Persistent notification that ends up in the user's inbox. Also sent to offline users
         }
+
+        public enum LookupResultTypes
+        {
+            NoMatch,
+            SingleMatch,
+            MultiMatch
+        }
+
+        #pragma warning disable format
+        [Flags]
+        public enum LookupTypes
+        {
+            None    = 0,
+            Item    = 1 << 1,
+            Tag     = 1 << 2,
+            User    = 1 << 3,
+            Store   = 1 << 4,
+        }
+        #pragma warning restore format
     }
 }
