@@ -15,8 +15,6 @@ using System.Text;
 using static Eco.Moose.Data.Enums;
 using static Eco.Moose.Features.Trade;
 
-using StoreOfferList = System.Collections.Generic.IEnumerable<System.Linq.IGrouping<string, System.Tuple<Eco.Gameplay.Components.Store.StoreComponent, Eco.Gameplay.Components.TradeOffer>>>;
-
 namespace Eco.Moose.Plugin
 {
     [ChatCommandHandler]
@@ -342,8 +340,8 @@ namespace Eco.Moose.Plugin
                 object matchedEntity = lookupRes.Matches.First();
                 LookupTypes matchedEntityType = lookupRes.MatchedTypes;
 
-                Trade.FindOffers(matchedEntity, matchedEntityType, out StoreOfferList groupedBuyOffers, out StoreOfferList groupedSellOffers);
-                Trade.FormatTrades(callingUser, matchedEntityType, groupedBuyOffers, groupedSellOffers, out string message);
+                TradeOfferList tradeList = Trade.FindOffers(matchedEntity, matchedEntityType);
+                Trade.FormatTrades(callingUser, matchedEntityType, tradeList.BuyOffers, tradeList.SellOffers, out string message);
                 DisplayCommandData(callingUser, Constants.GUI_PANEL_TRADES, DynamicLookup.GetEntityName(matchedEntity), message);
             }, callingUser);
         }

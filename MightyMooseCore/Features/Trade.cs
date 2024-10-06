@@ -19,6 +19,20 @@ using StoreOfferList = System.Collections.Generic.IEnumerable<System.Linq.IGroup
 
 namespace Eco.Moose.Features
 {
+    public class TradeOfferList
+    {
+        public TradeOfferList(StoreOfferList buyOffers, StoreOfferList sellOffers)
+        {
+            BuyOffers = buyOffers;
+            SellOffers = sellOffers;
+            OfferCount = (UInt64)(BuyOffers.Count() + sellOffers.Count());
+        }
+
+        public StoreOfferList BuyOffers { get; private set; }
+        public StoreOfferList SellOffers { get; private set; }
+        public UInt64 OfferCount { get; private set; }
+    }
+
     public class Trade
     {
         public const LookupTypes FULL_TRADE_LOOKUP_MASK = LookupTypes.Item | LookupTypes.Tag | LookupTypes.User | LookupTypes.Store;
@@ -28,11 +42,10 @@ namespace Eco.Moose.Features
             return store.CurrencyName.StripTags();
         }
 
-        public static void FindOffers(object entity, LookupTypes entityType, out StoreOfferList groupedBuyOffers, out StoreOfferList groupedSellOffers)
+        public static TradeOfferList FindOffers(object entity, LookupTypes entityType)
         {
-            groupedBuyOffers = null;
-            groupedSellOffers = null;
-
+            StoreOfferList groupedBuyOffers = null;
+            StoreOfferList groupedSellOffers = null;
             if (entityType == LookupTypes.Item)
             {
                 bool filter(StoreComponent store, TradeOffer offer) => offer.Stack.Item.TypeID == ((Item)entity).TypeID;
@@ -57,6 +70,12 @@ namespace Eco.Moose.Features
                 groupedSellOffers = SellOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
                 groupedBuyOffers = BuyOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
             }
+            else
+            {
+                return null;
+            }
+
+            return new TradeOfferList(groupedBuyOffers, groupedSellOffers);
         }
 
         public static IEnumerable<Tuple<StoreComponent, TradeOffer>>
