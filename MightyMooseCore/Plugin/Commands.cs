@@ -15,6 +15,12 @@ using System.Text;
 using static Eco.Moose.Data.Enums;
 using static Eco.Moose.Features.Trade;
 
+
+#if DEBUG
+using Eco.Gameplay.GameActions;
+using System.Reflection;
+#endif
+
 namespace Eco.Moose.Plugin
 {
     [ChatCommandHandler]
