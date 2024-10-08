@@ -1,4 +1,6 @@
-﻿namespace Eco.Moose.Data
+﻿using static Eco.Moose.Data.Enums;
+
+namespace Eco.Moose.Data
 {
     public static class Constants
     {
@@ -20,8 +22,13 @@
         public const int PLOT_SIZE_M2 = 5 * 5;
 
         public const string GUI_PANEL_SIMPLE_LIST = "MooseSimpleList";
+        public const string GUI_PANEL_LOOKUP = "MooseLookup";
         public const string GUI_PANEL_TRADES = "MooseTrades";
         public const string GUI_PANEL_TASTE = "MooseTaste";
+
+        public const LookupTypes STATIC_ENTITIES_LOOKUP_MASK = LookupTypes.Item | LookupTypes.Tag;
+        public const LookupTypes DYNAMIC_ENTITIES_LOOKUP_MASK = LookupTypes.User | LookupTypes.Store;
+        public const LookupTypes FULL_LOOKUP_MASK = (LookupTypes)~0;
         public const LookupTypes TRADE_LOOKUP_MASK = LookupTypes.Item | LookupTypes.Tag | LookupTypes.User | LookupTypes.Store;
     }
 }

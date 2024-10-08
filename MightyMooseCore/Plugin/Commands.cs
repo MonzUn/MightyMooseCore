@@ -3,6 +3,7 @@ using Eco.Core.Utils;
 using Eco.Gameplay.Items;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.Messaging.Chat.Commands;
+using Eco.Gameplay.Systems.NewTooltip.TooltipLibraryFiles;
 using Eco.Moose.Data;
 using Eco.Moose.Features;
 using Eco.Moose.Tools.Logger;
@@ -13,7 +14,11 @@ using Eco.Moose.Utils.TextUtils;
 using Eco.Shared.Utils;
 using System.Text;
 using static Eco.Moose.Data.Enums;
-using static Eco.Moose.Features.Trade;
+using Eco.Gameplay.Systems.NewTooltip;
+using Eco.Shared.Serialization;
+using Eco.Shared.Items;
+
+
 
 
 #if DEBUG
@@ -322,6 +327,55 @@ namespace Eco.Moose.Plugin
         #endregion
 
         #region Features
+
+        [ChatSubCommand("Moose", "Displays information about the looked up entity.", ChatAuthorizationLevel.User)]
+        public static void Lookup(User callingUser, string searchName)
+        {
+            ExecuteCommand<object>((lUser, args) =>
+            {
+                LookupResult lookupRes = DynamicLookup.Lookup(searchName, Constants.FULL_LOOKUP_MASK);
+                if (lookupRes.Result != LookupResultTypes.SingleMatch)
+                {
+                    if (lookupRes.Result == LookupResultTypes.MultiMatch)
+                        ReportCommandInfo(callingUser, lookupRes.ErrorMessage);
+                    else
+                        ReportCommandError(callingUser, lookupRes.ErrorMessage);
+                    return;
+                }
+                object matchedEntity = lookupRes.Matches.First();
+
+                string title = DynamicLookup.GetEntityName(matchedEntity);
+                StringBuilder content = new StringBuilder();
+                switch(lookupRes.MatchedTypes)
+                {
+                    case LookupTypes.Item:
+                        {
+                            Item item = (Item)matchedEntity;
+                            BSONObject bson = TooltipManagerServer.Obj.GetTooltipPartsByLinkId(callingUser.Player, $"Item:{item.Name}", Shared.Items.TooltipOrigin.None, Shared.Items.TTCat.Controls | Shared.Items.TTCat.Title);
+                            TooltipServerResponse response = new TooltipServerResponse();
+                            response.FromBson(bson.GetOrDefault("response").ArrayValue);
+                            
+                            content.Append(item.GetDescription);
+                        }
+                        break;
+
+                    case LookupTypes.Tag:
+                        {
+                            Tag tag = (Tag)matchedEntity;
+                            content.Append(tag.ReferenceTooltip());
+                        }
+                        break;
+
+                    case LookupTypes.User:
+                        break;
+
+                    case LookupTypes.Store:
+                        break;
+                }
+
+                DisplayCommandData(callingUser, Constants.GUI_PANEL_LOOKUP, title, content.ToString());
+            }, callingUser);
+        }
 
         [ChatSubCommand("Moose", "Displays available trades by player, tag, item or store.", ChatAuthorizationLevel.User)]
         public static void Trades(User callingUser, string searchName)
