@@ -25,10 +25,10 @@
         public enum LookupTypes
         {
             None    = 0,
-            Item    = 1 << 1,
-            Tag     = 1 << 2,
-            User    = 1 << 3,
-            Store   = 1 << 4,
+            Item    = 1 << 0,
+            Tag     = 1 << 1,
+            User    = 1 << 2,
+            Store   = 1 << 3,
         }
         #pragma warning restore format
     }
