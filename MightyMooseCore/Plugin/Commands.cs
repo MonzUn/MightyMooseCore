@@ -334,7 +334,7 @@ namespace Eco.Moose.Plugin
                     return;
                 }
 
-                LookupResult lookupRes = DynamicLookup.Lookup(searchName, FULL_TRADE_LOOKUP_MASK);
+                LookupResult lookupRes = DynamicLookup.Lookup(searchName, Constants.TRADE_LOOKUP_MASK);
                 if (lookupRes.Result != LookupResultTypes.SingleMatch)
                 {
                     if (lookupRes.Result == LookupResultTypes.MultiMatch)

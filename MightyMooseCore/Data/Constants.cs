@@ -22,5 +22,6 @@
         public const string GUI_PANEL_SIMPLE_LIST = "MooseSimpleList";
         public const string GUI_PANEL_TRADES = "MooseTrades";
         public const string GUI_PANEL_TASTE = "MooseTaste";
+        public const LookupTypes TRADE_LOOKUP_MASK = LookupTypes.Item | LookupTypes.Tag | LookupTypes.User | LookupTypes.Store;
     }
 }

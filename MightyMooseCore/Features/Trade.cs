@@ -35,8 +35,6 @@ namespace Eco.Moose.Features
 
     public class Trade
     {
-        public const LookupTypes FULL_TRADE_LOOKUP_MASK = LookupTypes.Item | LookupTypes.Tag | LookupTypes.User | LookupTypes.Store;
-
         public static string StoreCurrencyName(StoreComponent store)
         {
             return store.CurrencyName.StripTags();
