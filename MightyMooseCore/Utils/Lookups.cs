@@ -74,7 +74,7 @@ namespace Eco.Moose.Utils.Lookups
         public static Law ActiveLawByNameByNameOrId(string lawNameOrId) => int.TryParse(lawNameOrId, out int id) ? ActiveLawById(id) : ActiveLawByName(lawNameOrId);
 
         public static IEnumerable<Demographic> ActiveDemographics => ActiveSettlements.SelectMany(ActiveDemographicsForSettlement).Concat(DemographicManager.Obj.SpecialEntries);
-        public static IEnumerable<Demographic> ActiveDemographicsForSettlement(Settlement settlement) => DemographicManager.Obj.ActiveAndValidDemographics(settlement);
+        public static IEnumerable<Demographic> ActiveDemographicsForSettlement(Settlement settlement) => CivicsUtils.AllActiveAndValid<Demographic>(settlement);
         public static Demographic ActiveDemographicByName(string demographicName) => ActiveDemographics.FirstOrDefault(demographic => demographic.Name.EqualsCaseInsensitive(demographicName));
         public static Demographic ActiveDemographicById(int demographicId) => ActiveDemographics.FirstOrDefault(demographic => demographic.Id == demographicId);
         public static Demographic ActiveDemographicByNameOrId(string demographicNameOrId) => int.TryParse(demographicNameOrId, out int id) ? ActiveDemographicById(id) : ActiveDemographicByName(demographicNameOrId);
