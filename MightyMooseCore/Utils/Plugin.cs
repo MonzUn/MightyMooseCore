@@ -19,7 +19,7 @@ namespace Eco.Moose.Utils.Plugin
             }
 
             // TODO: Make the Name parameter accessible in vanilla and remove this reflection
-            string configName = (config.GetType().GetProperty("Name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(config) as string ?? string.Empty);
+            string configName = (config.GetType().GetProperty("Name", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)?.GetValue(config) as string ?? string.Empty);
             if(configName.IsEmpty())
             {
                 return Tuple.Create(false, "Failed to resolve config file name");
