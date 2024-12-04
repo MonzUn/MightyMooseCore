@@ -72,6 +72,11 @@
       <HintPath Condition="Exists('..\..\Eco\Server\bin\Release\net7.0-windows\StrangeCloud.Service.Client.CSharp.dll')">..\..\Eco\Server\bin\Release\net7.0-windows\StrangeCloud.Service.Client.CSharp.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="C5">
+      <HintPath Condition="Exists('..\Dependencies\C5.dll')">..\Dependencies\C5.dll</HintPath>
+      <HintPath Condition="Exists('..\..\Eco\Server\bin\Release\net8.0-windows\C5.dll')">..\..\Eco\Server\bin\Release\net7.0-windows\C5.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 
 </Project>

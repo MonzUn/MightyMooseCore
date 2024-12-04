@@ -101,6 +101,7 @@ namespace Eco.Moose.Plugin
         public class WorldStorageData
         {
             public Dictionary<int, int> CurrencyToTradeCountMap = new Dictionary<int, int>();
+            int PreviousTickDay = -1;
         }
     }
 }

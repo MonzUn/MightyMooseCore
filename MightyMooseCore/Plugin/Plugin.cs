@@ -7,12 +7,16 @@ using Eco.Gameplay.Aliases;
 using Eco.Gameplay.GameActions;
 using Eco.Gameplay.Property;
 using Eco.Gameplay.Settlements;
+using Eco.Moose.Data;
 using Eco.Moose.Events;
 using Eco.Moose.Events.Converter;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Tools.VersionChecker;
 using Eco.Moose.Utils.Lookups;
+using Eco.Shared.Serialization;
 using Eco.Shared.Utils;
+using Eco.Simulation.Agents;
+using Eco.Simulation.Time;
 using Eco.WorldGenerator;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
@@ -31,7 +35,7 @@ public class MightyMooseCoreMod : IModInit
 namespace Eco.Moose.Plugin
 {
     [Priority(PriorityAttribute.VeryHigh)] // Need to start before any dependent plugins
-    public class MightyMooseCore : IModKitPlugin, IInitializablePlugin, IShutdownablePlugin, IConfigurablePlugin, IGameActionAware
+    public class MightyMooseCore : IModKitPlugin, IInitializablePlugin, IShutdownablePlugin, IConfigurablePlugin, IGameActionAware, ITickable
     {
         public readonly string PluginName = "MightyMooseCore";
         public readonly Version InstalledVersion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -66,9 +70,16 @@ namespace Eco.Moose.Plugin
         public string GetStatus() => Status;
         public IPluginConfig PluginConfig => config;
         public MightyMooseCoreConfig ConfigData => config.Config;
+
+        public double NextTick { get; set; } = WorldTime.Seconds + Constants.PLUGIN_TICK_RATE;
+        public C5.IPriorityQueueHandle<ITickable> QueueHandle { get; set; }
+
         public object GetEditObject() => config.Config;
         public void OnEditObjectChanged(object o, string param) => ConfigData.OnConfigChanged(param);
         public LazyResult ShouldOverrideAuth(IAlias alias, IOwned property, GameAction action) => LazyResult.FailedNoMessage;
+        public void Destroy() { }
+        public bool IsReady() => this.NextTick <= WorldTime.Seconds;
+        public int CompareTo(object other) => this.NextTick.CompareTo(((MightyMooseCore)other).NextTick);
 
         public async void Initialize(TimedTask timer)
         {
@@ -137,6 +148,11 @@ namespace Eco.Moose.Plugin
         {
             EventConverter.OnEventConverted.Remove(OnEventConverted);
             ActionUtil.RemoveListener(this);
+        }
+
+        public void Tick()
+        {
+            NextTick = WorldTime.Seconds + Constants.PLUGIN_TICK_RATE;
         }
 
         public void ActionPerformed(GameAction action)

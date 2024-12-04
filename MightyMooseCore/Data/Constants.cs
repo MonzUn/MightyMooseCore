@@ -9,6 +9,8 @@ namespace Eco.Moose.Data
 
         public static readonly string DEFAULT_CHAT_CHANNEL_NAME = "general";
 
+        public const int PLUGIN_TICK_RATE = 60;
+
         public const int SECONDS_PER_MINUTE = 60;
         public const int SECONDS_PER_HOUR = SECONDS_PER_MINUTE * 60;
         public const int SECONDS_PER_DAY = SECONDS_PER_HOUR * 24;
