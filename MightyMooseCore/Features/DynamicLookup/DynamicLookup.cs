@@ -4,6 +4,7 @@ using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.TextLinks;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Utils.Lookups;
+using Eco.Moose.Utils.TextUtils;
 using Eco.Shared.Utils;
 using System.Reflection;
 using static Eco.Moose.Data.Enums;
@@ -83,9 +84,9 @@ namespace Eco.Moose.Features
             else if (entity is Tag tag)
                 return tag.DisplayName;
             else if (entity is User user)
-                return user.Name;
+                return user.Name.StripTags();
             else if (entity is StoreComponent store)
-                return store.Parent.Name;
+                return store.Parent.Name.StripTags();
 
             Logger.Warning("Failed to lookup name for unknown entity type.", Assembly.GetCallingAssembly());
             return string.Empty;
