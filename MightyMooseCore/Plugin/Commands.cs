@@ -2,8 +2,11 @@
 using Eco.Core.Utils;
 using Eco.Gameplay.Items;
 using Eco.Gameplay.Players;
+using Eco.Gameplay.Settlements;
+using Eco.Gameplay.Skills;
 using Eco.Gameplay.Systems.Chat;
 using Eco.Gameplay.Systems.Messaging.Chat.Commands;
+using Eco.Gameplay.Systems.TextLinks;
 using Eco.Moose.Data;
 using Eco.Moose.Features;
 using Eco.Moose.Tools.Logger;
@@ -13,6 +16,7 @@ using Eco.Moose.Utils.Plugin;
 using Eco.Moose.Utils.TextUtils;
 using Eco.Shared.Utils;
 using System.Text;
+using static Eco.Moose.Data.CommandData;
 using static Eco.Moose.Data.Enums;
 
 #if DEBUG
@@ -400,6 +404,43 @@ namespace Eco.Moose.Plugin
 
                 DisplayCommandData(caller, Constants.GUI_PANEL_TASTE, $"{targetUser.MarkedUpName} food preferences", data);
             }, caller);
+        }
+
+        [ChatSubCommand("Moose", "Displays information about skills for all players or a specific settlement", ChatAuthorizationLevel.User)]
+        public static void Skills(User caller, bool includeInactive = false, Settlement? settlementFilter = null)
+        {
+            ExecuteCommand<object>(async (lUser, args) =>
+            {
+                SpecialtyAssignmentData specialtyData = Features.Skills.GetPlayerSpecialtyData(settlementFilter);
+
+                StringBuilder data = new StringBuilder();
+                Dictionary<Skill, List<User>> skillAndUsers = includeInactive ? specialtyData.AllPlayers : specialtyData.ActivePlayers;
+                foreach (Skill specialty in specialtyData.Specialties.OrderBy(s => skillAndUsers[s].Count()))
+                {
+                    if (!specialty.IsDiscovered())
+                        continue;
+
+                    string specialtyCountDescription = includeInactive ? $"{specialtyData.TotalPlayerCount[specialty]} players" : $"{specialtyData.ActivePlayerCount[specialty]} active";
+                    data.AppendLine($"{specialty.UILink()} ({specialtyCountDescription})");
+
+                    foreach (User user in skillAndUsers[specialty].OrderByDescending(u => u.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level))
+                    {
+                        int level = user.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level;
+                        data.AppendLine($"    {user.UILink()}  -  {level}");
+                    }
+
+                    data.AppendLine();
+                }
+
+                string title = settlementFilter == null ? "Global Skills" : $"{settlementFilter.UILink()} Skills";
+                DisplayCommandData(caller, Constants.GUI_PANEL_SKILLS, title, data.ToString());
+            }, caller);
+        }
+
+        [ChatSubCommand("Moose", "Displays information about skills for a specific settlement", ChatAuthorizationLevel.User)]
+        public static void SettlementSkills(User caller, Settlement settlementFilter, bool includeInactive = false)
+        {
+            Skills(caller, includeInactive, settlementFilter);
         }
 
         #endregion

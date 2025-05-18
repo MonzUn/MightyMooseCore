@@ -106,6 +106,8 @@ namespace Eco.Moose.Utils.Lookups
         public static Deed DeedByNameOrId(string deedNameOrId) => int.TryParse(deedNameOrId, out int id) ? DeedById(id) : DeedByName(deedNameOrId);
 
         public static IEnumerable<Skill> Specialties => SkillTree.AllSkillTrees.SelectMany(skilltree => skilltree.ProfessionChildren).Select(skilltree => skilltree.StaticSkill);
+
+        public static IEnumerable<Skill> RefundableSpecialties => Specialties.Where(specialty => specialty.CanBeRefunded);
         public static Skill SpecialtyByName(string specialtyName) => Specialties.FirstOrDefault(specialty => specialty.Name.EqualsCaseInsensitive(specialtyName));
 
         public static IEnumerable<Skill> Professions => SkillTree.ProfessionSkillTrees.Select(skilltree => skilltree.StaticSkill);
