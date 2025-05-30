@@ -407,11 +407,11 @@ namespace Eco.Moose.Plugin
         }
 
         [ChatSubCommand("Moose", "Displays information about skills for all players or a specific settlement", ChatAuthorizationLevel.User)]
-        public static void Skills(User caller, bool includeInactive = false, Settlement? settlementFilter = null)
+        public static void Skills(User caller, bool includeLevelZero = false, bool includeInactive = false, Settlement? settlementFilter = null)
         {
             ExecuteCommand<object>(async (lUser, args) =>
             {
-                SpecialtyAssignmentData specialtyData = Features.Skills.GetPlayerSpecialtyData(settlementFilter);
+                SpecialtyAssignmentData specialtyData = Features.Skills.GetPlayerSpecialtyData(settlementFilter, includeLevelZero: includeLevelZero);
 
                 StringBuilder data = new StringBuilder();
                 Dictionary<Skill, List<User>> skillAndUsers = includeInactive ? specialtyData.AllPlayers : specialtyData.ActivePlayers;
@@ -426,7 +426,12 @@ namespace Eco.Moose.Plugin
                     foreach (User user in skillAndUsers[specialty].OrderByDescending(u => u.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level))
                     {
                         int level = user.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level;
-                        data.AppendLine($"    {user.UILink()}  -  {level}");
+                        string userLine = $"    {user.UILink()}  -  {level}";
+
+                        if (level < 1)
+                            userLine = Text.Color(Color.Yellow, userLine);
+
+                        data.AppendLine(userLine);
                     }
 
                     data.AppendLine();
@@ -438,9 +443,9 @@ namespace Eco.Moose.Plugin
         }
 
         [ChatSubCommand("Moose", "Displays information about skills for a specific settlement", ChatAuthorizationLevel.User)]
-        public static void SettlementSkills(User caller, Settlement settlementFilter, bool includeInactive = false)
+        public static void SettlementSkills(User caller, Settlement settlementFilter, bool includeLevelZero = false, bool includeInactive = false)
         {
-            Skills(caller, includeInactive, settlementFilter);
+            Skills(caller, includeInactive, includeLevelZero, settlementFilter);
         }
 
         #endregion
