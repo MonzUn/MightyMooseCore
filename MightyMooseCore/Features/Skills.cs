@@ -8,7 +8,7 @@ namespace Eco.Moose.Features
 {
     public static class Skills
     {
-        public static SpecialtyAssignmentData GetPlayerSpecialtyData(Settlement? settlementFilter, bool includeNonRefundable = false, bool includeLevelZero = false)
+        public static SpecialtyAssignmentData GetPlayerSpecialtyData(Settlement? settlementFilter, bool includeNonRefundable = false, bool includeScrollNoStar = false)
         {
             List<Skill> specialties = includeNonRefundable ? Lookups.Specialties.ToList() : Lookups.RefundableSpecialties.ToList();
             Dictionary<Skill, List<User>> allPlayersPerSpecialty = new Dictionary<Skill, List<User>>();
@@ -31,7 +31,8 @@ namespace Eco.Moose.Features
                         if (matchingSkill == null)
                             continue;
 
-                        if (!includeLevelZero && skill.Level < 1) // Conditionally ignore players who have only read the scroll but not consumed a star
+                        // Conditionally ignore players who have only read the scroll but not consumed a star
+                        if (skill.StarsSpent < 1 && (!includeScrollNoStar || skill.TimeLearned == double.MaxValue)) // The TimeLearned check is for determining if a skill is a starting skill
                             continue;
 
                         allPlayersPerSpecialty[matchingSkill].Add(user);
