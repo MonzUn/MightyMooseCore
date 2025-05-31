@@ -407,23 +407,35 @@ namespace Eco.Moose.Plugin
         }
 
         [ChatSubCommand("Moose", "Displays information about skills for all players or a specific settlement", ChatAuthorizationLevel.User)]
-        public static void Skills(User caller, bool includeLevelZero = false, bool includeInactive = false, Settlement? settlementFilter = null)
+        public static void Skills(User caller, bool includeScrollNoStar = false, bool includeInactive = false, Settlement? settlementFilter = null)
         {
             ExecuteCommand<object>(async (lUser, args) =>
             {
-                SpecialtyAssignmentData specialtyData = Features.Skills.GetPlayerSpecialtyData(settlementFilter, includeLevelZero: includeLevelZero);
+                SpecialtyAssignmentData specialtyData = Features.Skills.GetPlayerSpecialtyData(settlementFilter, includeScrollNoStar: includeScrollNoStar);
 
-                StringBuilder data = new StringBuilder();
                 Dictionary<Skill, List<User>> skillAndUsers = includeInactive ? specialtyData.AllPlayers : specialtyData.ActivePlayers;
+                specialtyData.Specialties.Sort(
+                delegate (Skill left, Skill right)
+                {
+                    int leftUserCount = skillAndUsers[left].Count();
+                    int rightUserCount = skillAndUsers[right].Count();
+                    if (leftUserCount == rightUserCount)
+                    {
+                        return left.Name.StripTags().CompareTo(right.Name.StripTags());
+                    }
+                    return leftUserCount.CompareTo(rightUserCount);
+                });
+
+                StringBuilder description = new StringBuilder();
                 foreach (Skill specialty in specialtyData.Specialties.OrderBy(s => skillAndUsers[s].Count()))
                 {
                     if (!specialty.IsDiscovered())
                         continue;
 
                     string specialtyCountDescription = includeInactive ? $"{specialtyData.TotalPlayerCount[specialty]} players" : $"{specialtyData.ActivePlayerCount[specialty]} active";
-                    data.AppendLine($"{specialty.UILink()} ({specialtyCountDescription})");
+                    description.AppendLine($"{specialty.UILink()} ({specialtyCountDescription})");
 
-                    foreach (User user in skillAndUsers[specialty].OrderByDescending(u => u.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level))
+                    foreach (User user in skillAndUsers[specialty].OrderByDescending(user => user.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level))
                     {
                         int level = user.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level;
                         string userLine = $"    {user.UILink()}  -  {level}";
@@ -431,14 +443,14 @@ namespace Eco.Moose.Plugin
                         if (level < 1)
                             userLine = Text.Color(Color.Yellow, userLine);
 
-                        data.AppendLine(userLine);
+                        description.AppendLine(userLine);
                     }
 
-                    data.AppendLine();
+                    description.AppendLine();
                 }
 
                 string title = settlementFilter == null ? "Global Skills" : $"{settlementFilter.UILink()} Skills";
-                DisplayCommandData(caller, Constants.GUI_PANEL_SKILLS, title, data.ToString());
+                DisplayCommandData(caller, Constants.GUI_PANEL_SKILLS, title, description.ToString());
             }, caller);
         }
 
