@@ -16,6 +16,7 @@ using Eco.Gameplay.Players;
 using Eco.Gameplay.Property;
 using Eco.Gameplay.Settlements;
 using Eco.Gameplay.Skills;
+using Eco.Gameplay.Systems.Messaging.Chat.Channels;
 using Eco.Moose.Data;
 using Eco.Plugins.Networking;
 using Eco.Shared.Items;
@@ -24,7 +25,6 @@ using Eco.Shared.Utils;
 using Eco.Simulation.Time;
 using Eco.Simulation.WorldLayers;
 using Eco.Simulation.WorldLayers.Layers;
-using User = Eco.Gameplay.Players.User;
 
 namespace Eco.Moose.Utils.Lookups
 {
