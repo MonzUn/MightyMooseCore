@@ -68,7 +68,7 @@ namespace Eco.Moose.Plugin
         public MightyMooseCoreConfig ConfigData => config.Config;
         public object GetEditObject() => config.Config;
         public void OnEditObjectChanged(object o, string param) => ConfigData.OnConfigChanged(param);
-        public LazyResult ShouldOverrideAuth(IAlias alias, IOwned property, GameAction action) => LazyResult.FailedNoMessage;
+        public LazyResult ShouldOverrideAuth(IAlias? alias, IOwned? property, GameAction? action) => LazyResult.FailedNoMessage;
 
         public async void Initialize(TimedTask timer)
         {
