@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Eco.Shared.Utils;
+using System.ComponentModel;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -22,6 +23,15 @@ namespace Eco.Moose.Utils.TextUtils
             FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
             DescriptionAttribute[] attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
             return attributes.Length > 0 ? attributes[0].Description : value.ToString();
+        }
+
+        public static int CalculateStringSimilarityScore(string source, string target, bool prioritizeContainingStrings = true)
+        {
+            const int CONTAINS_MULTIPLIER = 100;
+            int score = Algorithms.DamerauLevenshteinDistance.CalculateDamerauLevenshteinDistance(source, target);
+            if (prioritizeContainingStrings && target.ContainsCaseInsensitive(source))
+                score -= (source.Length * CONTAINS_MULTIPLIER); // Prioritize strings that partially contain the source
+            return score;
         }
     }
 }
