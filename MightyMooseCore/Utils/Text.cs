@@ -25,7 +25,7 @@ namespace Eco.Moose.Utils.TextUtils
             return attributes.Length > 0 ? attributes[0].Description : value.ToString();
         }
 
-        public static int CalculateStringSimilarityScore(string source, string target, bool prioritizeContainingStrings = true)
+        public static int CalculateStringDeviationScore(string source, string target, bool prioritizeContainingStrings = true)
         {
             const int CONTAINS_MULTIPLIER = 100;
             int score = Algorithms.DamerauLevenshteinDistance.CalculateDamerauLevenshteinDistance(source, target);
