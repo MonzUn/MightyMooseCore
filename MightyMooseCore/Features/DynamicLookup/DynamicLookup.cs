@@ -55,7 +55,7 @@ namespace Eco.Moose.Features
             {
                 if ((typeFlag & type) != 0)
                 {
-                    lookupCollection = lookupCollection.Union(_lookupConnections[type]()).ToList();
+                    lookupCollection.AddUniqueRange(_lookupConnections[type]());
                 }
             }
             return lookupCollection;
