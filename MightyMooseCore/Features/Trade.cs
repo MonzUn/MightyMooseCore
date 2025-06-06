@@ -97,7 +97,7 @@ namespace Eco.Moose.Features
                    int start = 0,
                    int count = int.MaxValue)
         {
-            return Lookups.Stores
+            return Lookups.StoresComponents
                 .SelectMany(store =>
                     storeToOffers(store)
                         .Where(offer => offer.IsSet && includeFilter(store, offer))

@@ -18,7 +18,7 @@ namespace Eco.Moose.Features
             { LookupTypes.Item, Lookups.Items.Cast<object>},
             { LookupTypes.Tag, Lookups.Tags.Cast<object>},
             { LookupTypes.User, Lookups.Users.Cast<object>},
-            { LookupTypes.Store, Lookups.Stores.Cast<object>},
+            { LookupTypes.Store, Lookups.StoresComponents.Cast<object>},
         };
 
         public static LookupResult Lookup(string lookupName, LookupTypes typeFlag)

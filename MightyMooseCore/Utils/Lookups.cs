@@ -54,6 +54,8 @@ namespace Eco.Moose.Utils.Lookups
         public static User OnlineUserByNameId(string userNameOrId) => int.TryParse(userNameOrId, out int id) ? OnlineUserById(id) : OnlineUserByName(userNameOrId);
         public static User OnlineUserByStrangeOrStrangeID(string strangeID, string steamID) => OnlineUsers.FirstOrDefault(user => user.SteamId.Equals(steamID) || user.StrangeId.Equals(strangeID));
 
+        public static IEnumerable<StoreComponent> StoresComponents => WorldObjectUtil.AllObjsWithComponent<StoreComponent>().Where(store => store.Parent.Enabled && store.Owners != null);
+
         public static IEnumerable<Settlement> Settlements => Registrars.Get<Settlement>().NonNull();
         public static IEnumerable<Settlement> ActiveSettlements => Settlements.Where(settlement => settlement.IsActive);
         public static IEnumerable<Settlement> SettlementsWithActiveUsers => ActiveSettlements.Where(settlement => settlement.Citizens.Any(user => user.IsActive));
@@ -106,7 +108,6 @@ namespace Eco.Moose.Utils.Lookups
         public static Deed DeedByNameOrId(string deedNameOrId) => int.TryParse(deedNameOrId, out int id) ? DeedById(id) : DeedByName(deedNameOrId);
 
         public static IEnumerable<Skill> Specialties => SkillTree.AllSkillTrees.SelectMany(skilltree => skilltree.ProfessionChildren).Select(skilltree => skilltree.StaticSkill);
-
         public static IEnumerable<Skill> RefundableSpecialties => Specialties.Where(specialty => specialty.CanBeRefunded);
         public static Skill SpecialtyByName(string specialtyName) => Specialties.FirstOrDefault(specialty => specialty.Name.EqualsCaseInsensitive(specialtyName));
 
@@ -117,8 +118,6 @@ namespace Eco.Moose.Utils.Lookups
         public static IEnumerable<FoodItem> FoodItems => Items.OfType<FoodItem>();
 
         public static IEnumerable<Tag> Tags => TagManager.AllTags;
-
-        public static IEnumerable<StoreComponent> Stores => WorldObjectUtil.AllObjsWithComponent<StoreComponent>().Where(store => store.Owners != null);
 
         public static IEnumerable<WorldLayer> Layers => WorldLayerManager.Obj.Layers;
         public static IEnumerable<WorldLayer> VisibleLayers => WorldLayerManager.Obj.Layers.Where(layer => layer.IsVisible);
