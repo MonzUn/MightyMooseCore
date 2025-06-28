@@ -76,16 +76,16 @@ namespace Eco.Moose.Features
             return matchingEntities;
         }
 
-        public static string GetEntityName(object entity)
+        public static string GetEntityName(object entity, bool useUILinkIfAvailable = false)
         {
             if (entity is Item item)
-                return item.DisplayName;
+                return useUILinkIfAvailable ? item.UILink() : item.DisplayName;
             else if (entity is Tag tag)
-                return tag.DisplayName;
+                return useUILinkIfAvailable ? tag.UILink() : tag.DisplayName;
             else if (entity is User user)
-                return user.Name.StripTags();
+                return useUILinkIfAvailable ? user.UILink() : user.Name.StripTags();
             else if (entity is StoreComponent store)
-                return store.Parent.Name.StripTags();
+                return useUILinkIfAvailable ? store.UILink() : store.Parent.Name.StripTags();
 
             Logger.Warning("Failed to lookup name for unknown entity type.", Assembly.GetCallingAssembly());
             return string.Empty;
