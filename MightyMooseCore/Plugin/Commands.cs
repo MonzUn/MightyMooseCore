@@ -443,6 +443,9 @@ namespace Eco.Moose.Plugin
                         if (level < 1)
                             userLine = Text.Color(Color.Yellow, userLine);
 
+                        if (user.IsOnline)
+                            userLine += $" ({Text.Color(Color.Green, "Online")})";
+
                         description.AppendLine(userLine);
                     }
 
