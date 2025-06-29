@@ -351,7 +351,7 @@ namespace Eco.Moose.Plugin
 
                 TradeOfferList tradeList = Trade.FindOffers(matchedEntity, matchedEntityType);
                 Trade.FormatTrades(caller, matchedEntityType, tradeList.BuyOffers, tradeList.SellOffers, out string message);
-                DisplayCommandData(caller, Constants.GUI_PANEL_TRADES, DynamicLookup.GetEntityName(matchedEntity), message);
+                DisplayCommandData(caller, Constants.GUI_PANEL_TRADES, DynamicLookup.GetEntityName(matchedEntity, useUILinkIfAvailable: true), message);
             }, caller);
         }
 
