@@ -198,7 +198,7 @@ namespace Eco.Moose.Features
                 var line = $"{quantityString} - ${price} {getLabel(storeAndoffer)}";
 
                 // Apply color and sort
-                if (!store.OnOff.Enabled || !AuthManager.IsAuthorized(store.Parent, user, AccessType.ConsumerAccess, null, out _))
+                if (!store.OnOff.Enabled || !AuthManager.IsAuthorized(store.Parent, user, AccessType.ConsumerAccess, null))
                 {
                     line = Text.Color(Color.Red, line);
                     disabledOffers.AppendLine(line);
