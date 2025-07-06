@@ -56,6 +56,12 @@ namespace Eco.Moose.Utils.Lookups
         public static User OnlineUserByStrangeOrStrangeID(string strangeID, string steamID) => OnlineUsers.FirstOrDefault(user => user.SteamId.Equals(steamID) || user.StrangeId.Equals(strangeID));
 
         public static IEnumerable<StoreComponent> StoresComponents => WorldObjectUtil.AllObjsWithComponent<StoreComponent>().Where(store => store.Parent.Enabled && store.Owners != null);
+        public static IEnumerable<WorldObject> WorldObjects => ServiceHolder<IWorldObjectManager>.Obj.All;
+        public static IEnumerable<WorldObject> WorldObjectsByComponent<T>() => WorldObjects.Where(worldObj => worldObj.HasComponent<T>());
+        public static IEnumerable<WorldObject> WorldObjectsByTag(string tag) => WorldObjects.Where(worldObj => worldObj.TagNames().Contains(tag));
+        public static IEnumerable<WorldObject> WorldObjectsWithinRange(Vector2 origin, float range) => ServiceHolder<IWorldObjectManager>.Obj.GetObjectsWithin(origin, range);
+        public static IEnumerable<WorldObject> WorldObjectsWithinRange(WrappedPosition3 origin, float range) => ServiceHolder<IWorldObjectManager>.Obj.GetObjectsWithin(origin, range);
+        public static WorldObject WorldObjectById(Guid id) => ServiceHolder<IWorldObjectManager>.Obj.GetFromID(id);
         public static IEnumerable<RepairBountyComponent> RepairBounties => AllComponentsOfType<RepairBountyComponent>().Where(repairBounty => repairBounty.Enabled);
         public static IEnumerable<RepairBountyComponent> ClaimableRepairBounties => RepairBounties.Where(bounty => bounty.ShowRepairBounty());
 
