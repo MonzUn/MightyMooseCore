@@ -36,6 +36,35 @@ namespace Eco.Moose.Data
             public Dictionary<Skill, int> PlayerCountPerSpecialty { get; private set; }
         }
     }
+
+    public class RepairBountyLookupResult
+    {
+        public RepairBountyLookupResult(bool includesInactive, Settlement? settlementFilter, User? userFilter)
+        {
+            IncludesInactive = includesInactive;
+            SettlementFilter = settlementFilter;
+            UserFilter = userFilter;
         }
+
+        public bool IncludesInactive { get; private set; }
+        public Settlement? SettlementFilter { get; private set; }
+        public User? UserFilter { get; private set; }
+        public List<RepairBountyLookupData> Bounties { get; private set; } = new List<RepairBountyLookupData>();
+    }
+
+    public class RepairBountyLookupData
+    {
+        public RepairBountyLookupData(WorldObject repairObject, float durabilityPercent, Currency paymentCurrency, float paymentAmount)
+        {
+            RepairObject = repairObject;
+            DurabilityPercent = durabilityPercent;
+            PaymentCurrency = paymentCurrency;
+            PaymentAmount = paymentAmount;
+        }
+
+        public WorldObject RepairObject { get; private set; }
+        public float DurabilityPercent { get; private set; }
+        public Currency PaymentCurrency { get; private set; }
+        public float PaymentAmount { get; private set; }
     }
 }

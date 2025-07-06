@@ -7,6 +7,7 @@ using Eco.Gameplay.Civics.Elections;
 using Eco.Gameplay.Civics.Laws;
 using Eco.Gameplay.Civics.Misc;
 using Eco.Gameplay.Civics.Titles;
+using Eco.Gameplay.Components;
 using Eco.Gameplay.Components.Store;
 using Eco.Gameplay.Economy;
 using Eco.Gameplay.Economy.WorkParties;
@@ -55,6 +56,8 @@ namespace Eco.Moose.Utils.Lookups
         public static User OnlineUserByStrangeOrStrangeID(string strangeID, string steamID) => OnlineUsers.FirstOrDefault(user => user.SteamId.Equals(steamID) || user.StrangeId.Equals(strangeID));
 
         public static IEnumerable<StoreComponent> StoresComponents => WorldObjectUtil.AllObjsWithComponent<StoreComponent>().Where(store => store.Parent.Enabled && store.Owners != null);
+        public static IEnumerable<RepairBountyComponent> RepairBounties => AllComponentsOfType<RepairBountyComponent>().Where(repairBounty => repairBounty.Enabled);
+        public static IEnumerable<RepairBountyComponent> ClaimableRepairBounties => RepairBounties.Where(bounty => bounty.ShowRepairBounty());
 
         public static IEnumerable<Settlement> Settlements => Registrars.Get<Settlement>().NonNull();
         public static IEnumerable<Settlement> ActiveSettlements => Settlements.Where(settlement => settlement.IsActive);
