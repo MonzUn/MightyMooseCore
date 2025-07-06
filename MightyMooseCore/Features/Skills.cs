@@ -8,15 +8,13 @@ namespace Eco.Moose.Features
 {
     public static class Skills
     {
-        public static SpecialtyAssignmentData GetPlayerSpecialtyData(Settlement? settlementFilter, bool includeNonRefundable = false, bool includeScrollNoStar = false)
+        public static SpecialtyAssignmentLookupResult LookupSpecialtyAssignments(bool includeInactive, bool includeScrollNoStar = false, bool includeNonRefundable = false, Settlement? settlementFilter = null)
         {
             List<Skill> specialties = includeNonRefundable ? Lookups.Specialties.ToList() : Lookups.RefundableSpecialties.ToList();
-            Dictionary<Skill, List<User>> allPlayersPerSpecialty = new Dictionary<Skill, List<User>>();
-            Dictionary<Skill, List<User>> activePlayersPerSpecialty = new Dictionary<Skill, List<User>>();
+            Dictionary<Skill, List<User>> playersPerSpecialty = new Dictionary<Skill, List<User>>();
             foreach (Skill skill in specialties)
             {
-                allPlayersPerSpecialty.Add(skill, new List<User>());
-                activePlayersPerSpecialty.Add(skill, new List<User>());
+                playersPerSpecialty.Add(skill, new List<User>());
             }
 
             IEnumerable<User>? userList = settlementFilter == null ? Lookups.Users : settlementFilter.Citizens;
@@ -24,6 +22,10 @@ namespace Eco.Moose.Features
             {
                 foreach (User user in userList)
                 {
+                    // Conditionally filter out inactive players
+                    if (!includeInactive && !user.IsActive)
+                        continue;
+
                     foreach (Skill skill in user.Skillset.Skills)
                     {
                         // Find the skill in our list that matches the type of the skill in the skillset
@@ -35,14 +37,12 @@ namespace Eco.Moose.Features
                         if (skill.StarsSpent < 1 && (!includeScrollNoStar || skill.TimeLearned == double.MaxValue)) // The TimeLearned check is for determining if a skill is a starting skill
                             continue;
 
-                        allPlayersPerSpecialty[matchingSkill].Add(user);
-                        if (user.IsActive)
-                            activePlayersPerSpecialty[matchingSkill].Add(user);
+                        playersPerSpecialty[matchingSkill].Add(user);
                     }
                 }
             }
 
-            return new SpecialtyAssignmentData(settlementFilter, specialties, allPlayersPerSpecialty, activePlayersPerSpecialty);
+            return new SpecialtyAssignmentLookupResult(includeInactive, includeScrollNoStar, includeNonRefundable, settlementFilter, specialties, playersPerSpecialty);
         }
     }
 }

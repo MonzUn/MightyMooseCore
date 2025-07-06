@@ -1,4 +1,7 @@
-﻿using Eco.Gameplay.Players;
+﻿using Eco.Gameplay.Components;
+using Eco.Gameplay.Economy;
+using Eco.Gameplay.Objects;
+using Eco.Gameplay.Players;
 using Eco.Gameplay.Settlements;
 using Eco.Gameplay.Skills;
 
@@ -6,34 +9,33 @@ namespace Eco.Moose.Data
 {
     public static class CommandData
     {
-        public class SpecialtyAssignmentData
+        public class SpecialtyAssignmentLookupResult
         {
-            public SpecialtyAssignmentData(Settlement? settlement, IEnumerable<Skill> specialties, Dictionary<Skill, List<User>> allPlayersPerSpecialty, Dictionary<Skill, List<User>> activePlayersPerSpecialty)
+            public SpecialtyAssignmentLookupResult(bool includeNonRefundable, bool includeScrollNoStar, bool includeInactive, Settlement? settlement, IEnumerable<Skill> specialties, Dictionary<Skill, List<User>> playersPerSpecialty)
             {
-                Settlement = settlement;
+                IncludeNonRefundable = includeNonRefundable;
+                IncludeScrollNoStar = includeScrollNoStar;
+                IncludeInactive = includeInactive;
+                SettlementFilter = settlement;
                 Specialties = specialties.ToList();
-                AllPlayers = allPlayersPerSpecialty;
-                ActivePlayers = activePlayersPerSpecialty;
+                PlayersPerSpecialty = playersPerSpecialty;
 
-                TotalPlayerCount = new Dictionary<Skill, int>();
-                foreach (var entry in allPlayersPerSpecialty)
+                PlayerCountPerSpecialty = new Dictionary<Skill, int>();
+                foreach (var entry in playersPerSpecialty)
                 {
-                    TotalPlayerCount.Add(entry.Key, entry.Value.Count);
-                }
-
-                ActivePlayerCount = new Dictionary<Skill, int>();
-                foreach (var entry in activePlayersPerSpecialty)
-                {
-                    ActivePlayerCount.Add(entry.Key, entry.Value.Count);
+                    PlayerCountPerSpecialty.Add(entry.Key, entry.Value.Count);
                 }
             }
 
-            public Settlement? Settlement { get; private set; } = null;
+            public bool IncludeInactive { get; private set; }
+            public bool IncludeNonRefundable { get; private set; }
+            public bool IncludeScrollNoStar { get; private set; }
+            public Settlement? SettlementFilter { get; private set; }
             public List<Skill> Specialties { get; private set; }
-            public Dictionary<Skill, List<User>> AllPlayers { get; private set; }
-            public Dictionary<Skill, List<User>> ActivePlayers { get; private set; }
-            public Dictionary<Skill, int> TotalPlayerCount { get; private set; }
-            public Dictionary<Skill, int> ActivePlayerCount { get; private set; }
+            public Dictionary<Skill, List<User>> PlayersPerSpecialty { get; private set; }
+            public Dictionary<Skill, int> PlayerCountPerSpecialty { get; private set; }
+        }
+    }
         }
     }
 }

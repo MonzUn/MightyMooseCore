@@ -10,7 +10,7 @@ namespace Eco.Moose.Extensions
         public static bool IsWhitelisted(this User user) => UserManager.Config.UserPermission.WhiteList.Contains(user);
         public static bool IsBanned(this User user) => UserManager.Config.UserPermission.BlackList.Contains(user);
         public static bool IsMuted(this User user) => UserManager.Config.UserPermission.MuteList.Contains(user);
-        public static bool HasSpecialization(this User user, Type specialization) => user.Skillset.GetSkill(specialization)?.Level > 0;
+        public static bool HasSpecialization(this User user, Type specialization, int minimumLevel = 1) => user.Skillset.GetSkill(specialization)?.Level >= minimumLevel;
 
         public static double GetSecondsSinceLogin(this User user) => user.IsOnline ? Simulation.Time.WorldTime.Seconds - user.LoginTime : 0.0;
         public static double GetSecondsSinceLogout(this User user) => user.IsOnline ? 0.0 : Simulation.Time.WorldTime.Seconds - user.LogoutTime;

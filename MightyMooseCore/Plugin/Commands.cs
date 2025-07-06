@@ -411,9 +411,9 @@ namespace Eco.Moose.Plugin
         {
             ExecuteCommand<object>(async (lUser, args) =>
             {
-                SpecialtyAssignmentData specialtyData = Features.Skills.GetPlayerSpecialtyData(settlementFilter, includeScrollNoStar: includeScrollNoStar);
+                SpecialtyAssignmentLookupResult specialtyData = Features.Skills.LookupSpecialtyAssignments(includeInactive, includeScrollNoStar: includeScrollNoStar, includeNonRefundable: false, settlementFilter);
 
-                Dictionary<Skill, List<User>> skillAndUsers = includeInactive ? specialtyData.AllPlayers : specialtyData.ActivePlayers;
+                Dictionary<Skill, List<User>> skillAndUsers = specialtyData.PlayersPerSpecialty;
                 specialtyData.Specialties.Sort(
                 delegate (Skill left, Skill right)
                 {
@@ -432,10 +432,10 @@ namespace Eco.Moose.Plugin
                     if (!specialty.IsDiscovered())
                         continue;
 
-                    string specialtyCountDescription = includeInactive ? $"{specialtyData.TotalPlayerCount[specialty]} players" : $"{specialtyData.ActivePlayerCount[specialty]} active";
+                    string specialtyCountDescription = includeInactive ? $"{specialtyData.PlayerCountPerSpecialty[specialty]} players" : $"{specialtyData.PlayerCountPerSpecialty[specialty]} active";
                     description.AppendLine($"{specialty.UILink()} ({specialtyCountDescription})");
 
-                    foreach (User user in skillAndUsers[specialty].OrderByDescending(user => user.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level))
+                    foreach (User user in skillAndUsers[specialty].OrderByDescending(user => user.Skillset.Skills.First(skill => skill.GetType() == specialty.GetType()).Level))
                     {
                         int level = user.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level;
                         string userLine = $"    {user.UILink()}  -  {level}";
