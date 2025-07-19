@@ -406,7 +406,7 @@ namespace Eco.Moose.Plugin
             }, caller);
         }
 
-        [ChatSubCommand("Moose", "Displays information about skills for all players or a specific settlement", ChatAuthorizationLevel.User)]
+        [ChatSubCommand("Moose", "Displays information about skill distribution for all players or a specific settlement.", ChatAuthorizationLevel.User)]
         public static void Skills(User caller, bool includeScrollNoStar = false, bool includeInactive = false, Settlement? settlementFilter = null)
         {
             ExecuteCommand<object>(async (lUser, args) =>
@@ -457,7 +457,7 @@ namespace Eco.Moose.Plugin
             }, caller);
         }
 
-        [ChatSubCommand("Moose", "Displays information about skills for a specific settlement", ChatAuthorizationLevel.User)]
+        [ChatSubCommand("Moose", "Displays information about skill distribution for a specific settlement", ChatAuthorizationLevel.User)]
         public static void SettlementSkills(User caller, Settlement settlementFilter, bool includeLevelZero = false, bool includeInactive = false)
         {
             Skills(caller, includeInactive, includeLevelZero, settlementFilter);
