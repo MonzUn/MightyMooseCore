@@ -70,6 +70,23 @@ namespace Eco.Moose.Tools.Logger
             return true;
         }
 
+        public static LogLevel GetConfiguredLogLevel(Assembly? caller = null)
+        {
+            Assembly assembly = caller ?? Assembly.GetCallingAssembly();
+
+            // Protect the logger register from being used while a registration is in progress during server init
+            bool lockedMutex = false;
+            if (!serverInited)
+                lockedMutex = registerMutex.WaitOne();
+
+            bool foundLogData = Loggers.TryGetValue(assembly, out LogData logData);
+
+            if (lockedMutex)
+                registerMutex.ReleaseMutex();
+
+            return logData.ConfiguredLevel;
+        }
+
         public static bool SetConfiguredLogLevel(LogLevel level)
         {
             Assembly? assembly = Assembly.GetCallingAssembly();
