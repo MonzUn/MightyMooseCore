@@ -67,6 +67,7 @@ namespace Eco.Moose.Utils.Persistance
                     StreamWriter writer = new StreamWriter(path);
                     writer.Write(json);
                     writer.Flush();
+                    writer.Close();
                     Logger.Trace($"Successfully wrote persistance JSON to \"{path}\"", Assembly.GetCallingAssembly());
                 }
                 
