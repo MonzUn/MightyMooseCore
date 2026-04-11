@@ -2,8 +2,8 @@
   "profiles": {
     "MightyMooseCore": {
       "commandName": "Executable",
-      "executablePath": "$(SolutionDir)../Eco/Server/bin/Debug/net8.0-windows/EcoServer.exe",
-      "workingDirectory": "$(SolutionDir)../Eco/Server\\bin\\Debug\\net8.0-windows"
+      "executablePath": "$(SolutionDir)../Eco/Server/bin/Debug/net10.0-windows/EcoServer.exe",
+      "workingDirectory": "$(SolutionDir)../Eco/Server\\bin\\Debug\\net10.0-windows"
     }
   }
 }
