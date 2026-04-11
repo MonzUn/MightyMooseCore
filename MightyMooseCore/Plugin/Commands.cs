@@ -351,7 +351,7 @@ namespace Eco.Moose.Plugin
 
                 TradeOfferList tradeList = Trade.FindOffers(matchedEntity, matchedEntityType);
                 Trade.FormatTrades(caller, matchedEntityType, tradeList.BuyOffers, tradeList.SellOffers, out string message);
-                DisplayCommandData(caller, Constants.GUI_PANEL_TRADES, DynamicLookup.GetEntityName(matchedEntity, useUILinkIfAvailable: true), message);
+                DisplayCommandData(caller, Constants.GUI_PANEL_TRADES, DynamicLookup.GetEntityName(matchedEntity, useMarkedUpNameIfAvailable: true), message);
             }, caller);
         }
 
@@ -433,12 +433,12 @@ namespace Eco.Moose.Plugin
                         continue;
 
                     string specialtyCountDescription = includeInactive ? $"{specialtyData.PlayerCountPerSpecialty[specialty]} players" : $"{specialtyData.PlayerCountPerSpecialty[specialty]} active";
-                    description.AppendLine($"{specialty.UILink()} ({specialtyCountDescription})");
+                    description.AppendLine($"{specialty.MarkedUpName} ({specialtyCountDescription})");
 
                     foreach (User user in skillAndUsers[specialty].OrderByDescending(user => user.Skillset.Skills.First(skill => skill.GetType() == specialty.GetType()).Level))
                     {
                         int level = user.Skillset.Skills.First(s => s.GetType() == specialty.GetType()).Level;
-                        string userLine = $"    {user.UILink()}  -  {level}";
+                        string userLine = $"    {user.MarkedUpName}  -  {level}";
 
                         if (level < 1)
                             userLine = Text.Color(Color.Yellow, userLine);
@@ -452,7 +452,7 @@ namespace Eco.Moose.Plugin
                     description.AppendLine();
                 }
 
-                string title = settlementFilter == null ? "Global Skills" : $"{settlementFilter.UILink()} Skills";
+                string title = settlementFilter == null ? "Global Skills" : $"{settlementFilter.MarkedUpName} Skills";
                 DisplayCommandData(caller, Constants.GUI_PANEL_SKILLS, title, description.ToString());
             }, caller);
         }
