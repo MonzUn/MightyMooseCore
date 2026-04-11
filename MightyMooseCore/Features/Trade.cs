@@ -46,13 +46,13 @@ namespace Eco.Moose.Features
             StoreOfferList groupedSellOffers = null;
             if (entityType == LookupTypes.Item)
             {
-                bool filter(StoreComponent store, TradeOffer offer) => offer.Stack.Item.TypeID == ((Item)entity).TypeID;
+                bool filter(StoreComponent store, TradeOffer offer) => offer.IsTagOffer ? ((Item)entity).Tags().Contains(offer.Tag) : offer.Stack.Item.TypeID == ((Item)entity).TypeID;
                 groupedSellOffers = SellOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
                 groupedBuyOffers = BuyOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
             }
             else if (entityType == LookupTypes.Tag)
             {
-                bool filter(StoreComponent store, TradeOffer offer) => offer.Stack.Item.Tags().Contains((Tag)entity);
+                bool filter(StoreComponent store, TradeOffer offer) => offer.IsTagOffer ? ((Tag)entity).Id == offer.Tag.Id : offer.Stack.Item.Tags().Contains((Tag)entity);
                 groupedSellOffers = SellOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
                 groupedBuyOffers = BuyOffers(filter).GroupBy(tuple => StoreCurrencyName(tuple.Item1)).OrderBy(group => group.Key);
             }
@@ -102,7 +102,7 @@ namespace Eco.Moose.Features
                     storeToOffers(store)
                         .Where(offer => offer.IsSet && includeFilter(store, offer))
                         .Select(offer => Tuple.Create(store, offer)))
-                .OrderBy(t => t.Item2.Stack.Item.DisplayName)
+                .OrderBy(t => (t.Item2.IsTagOffer ? t.Item2.Tag.DisplayName : t.Item2.Stack.Item.DisplayName))
                 .Skip(start)
                 .Take(count);
         }
@@ -151,10 +151,10 @@ namespace Eco.Moose.Features
         {
             Func<Tuple<StoreComponent, TradeOffer>, string> getLabel = lookupType switch
             {
-                LookupTypes.Item => t => $"@ {t.Item1.Parent.MarkedUpName}",
-                LookupTypes.Tag => t => $"{t.Item2.Stack.Item.MarkedUpName} @ {t.Item1.Parent.MarkedUpName}",
-                LookupTypes.User => t => t.Item2.Stack.Item.MarkedUpName,
-                LookupTypes.Store => t => t.Item2.Stack.Item.MarkedUpName,
+                LookupTypes.Item => t => $"{t.Item2.GetOfferContentName()} @ {t.Item1.Parent.MarkedUpName.ToString().StripTags()}",
+                LookupTypes.Tag => t => $"{t.Item2.GetOfferContentName()} @ {t.Item1.Parent.MarkedUpName.ToString().StripTags()}",
+                LookupTypes.User => t => $"{t.Item2.GetOfferContentName()}",
+                LookupTypes.Store => t => $"{t.Item2.GetOfferContentName()}",
                 _ => t => string.Empty,
             };
 
