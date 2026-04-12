@@ -2,6 +2,7 @@
 using Eco.Gameplay.Items;
 using Eco.Gameplay.Players;
 using Eco.Gameplay.Systems.TextLinks;
+using Eco.Moose.Extensions;
 using Eco.Moose.Tools.Logger;
 using Eco.Moose.Utils.Lookups;
 using Eco.Shared.Utils;
@@ -83,9 +84,9 @@ namespace Eco.Moose.Features
             else if (entity is Tag tag)
                 return useMarkedUpNameIfAvailable ? tag.MarkedUpName : tag.DisplayName;
             else if (entity is User user)
-                return useMarkedUpNameIfAvailable ? user.MarkedUpName : user.Name.StripTags();
+                return useMarkedUpNameIfAvailable ? user.MarkedUpName : user.GetTagStrippedName();
             else if (entity is StoreComponent store)
-                return useMarkedUpNameIfAvailable ? store.UILink() : store.Parent.Name.StripTags();
+                return useMarkedUpNameIfAvailable ? store.UILink() : store.Parent.GetTagStrippedName();
 
             Logger.Warning("Failed to lookup name for unknown entity type.", Assembly.GetCallingAssembly());
             return string.Empty;

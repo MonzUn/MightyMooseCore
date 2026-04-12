@@ -151,8 +151,8 @@ namespace Eco.Moose.Features
         {
             Func<Tuple<StoreComponent, TradeOffer>, string> getLabel = lookupType switch
             {
-                LookupTypes.Item => t => $"{t.Item2.GetOfferContentName()} @ {t.Item1.Parent.MarkedUpName.ToString().StripTags()}",
-                LookupTypes.Tag => t => $"{t.Item2.GetOfferContentName()} @ {t.Item1.Parent.MarkedUpName.ToString().StripTags()}",
+                LookupTypes.Item => t => $"{t.Item2.GetOfferContentName()} @ {t.Item1.Parent.GetTagStrippedName()}",
+                LookupTypes.Tag => t => $"{t.Item2.GetOfferContentName()} @ {t.Item1.Parent.GetTagStrippedName()}",
                 LookupTypes.User => t => $"{t.Item2.GetOfferContentName()}",
                 LookupTypes.Store => t => $"{t.Item2.GetOfferContentName()}",
                 _ => t => string.Empty,
