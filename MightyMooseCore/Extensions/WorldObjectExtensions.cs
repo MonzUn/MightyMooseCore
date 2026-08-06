@@ -6,6 +6,6 @@ namespace Eco.Moose.Extensions
 {
     public static partial class Extensions
     {
-        public static string GetTagStrippedName(this WorldObject worldObject) => worldObject.MarkedUpName.ToString().StripTags();
+        public static string GetTagStrippedName(this WorldObject worldObject) => ExtensionHelpers.GetTagStrippedObjectName(worldObject, fallback: "Unknown Object");
     }
 }

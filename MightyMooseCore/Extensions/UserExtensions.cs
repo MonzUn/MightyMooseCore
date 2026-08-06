@@ -3,12 +3,13 @@ using Eco.Gameplay.Economy.Money;
 using Eco.Gameplay.Economy.Transfer;
 using Eco.Gameplay.Players;
 using Eco.Shared.Utils;
+using System.Reflection;
 
 namespace Eco.Moose.Extensions
 {
     public static partial class Extensions
     {
-        public static string GetTagStrippedName(this User user) => user.MarkedUpName.ToString().StripTags();
+        public static string GetTagStrippedName(this User user) => ExtensionHelpers.GetTagStrippedObjectName(user, fallback: "Unknown User");
 
         public static bool IsWhitelisted(this User user) => UserManager.Config.UserPermission.WhiteList.Contains(user);
         public static bool IsBanned(this User user) => UserManager.Config.UserPermission.BlackList.Contains(user);
